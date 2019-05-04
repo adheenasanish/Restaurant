@@ -11,6 +11,7 @@ namespace Restaurant.Models
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
             AspNetUserTokens = new HashSet<AspNetUserTokens>();
+            Customer = new HashSet<Customer>();
         }
 
         public string Id { get; set; }
@@ -33,5 +34,6 @@ namespace Restaurant.Models
         public ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         public ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
         public ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public ICollection<Customer> Customer { get; set; }
     }
 }

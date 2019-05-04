@@ -31,7 +31,14 @@ namespace Restaurant.Models
         // Unable to generate entity type for table 'dbo.Payment'. Please see the warning messages.
         // Unable to generate entity type for table 'dbo.administrator'. Please see the warning messages.
 
-      
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server= DESKTOP-UQ8S2PA\\SQLEXPRESS;Database=Restaurant;Trusted_Connection=True;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -174,6 +181,15 @@ namespace Restaurant.Models
                     .HasColumnName("street")
                     .HasMaxLength(40)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Userid)
+                    .HasColumnName("userid")
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Customer)
+                    .HasForeignKey(d => d.Userid)
+                    .HasConstraintName("FK__Customer__userid__6E01572D");
             });
 
             modelBuilder.Entity<FoodItem>(entity =>

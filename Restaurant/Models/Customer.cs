@@ -19,7 +19,9 @@ namespace Restaurant.Models
         public string Street { get; set; }
         public string City { get; set; }
         public bool? ProfileStatus { get; set; }
+        public string Userid { get; set; }
 
+        public AspNetUsers User { get; set; }
         public ICollection<Orders> Orders { get; set; }
     }
 }
