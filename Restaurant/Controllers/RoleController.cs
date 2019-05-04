@@ -18,7 +18,8 @@ namespace Restaurant.Controllers
         public IActionResult Index()
         {
             RoleRepo roleRepo = new RoleRepo(_context);
-            return View();
+           // IEnumerable < RoleRepo > = roleRepo.GetAllRoles();
+            return View(roleRepo.GetAllRoles());
         }
     }
 }
