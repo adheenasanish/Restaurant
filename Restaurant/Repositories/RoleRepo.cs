@@ -27,8 +27,8 @@ namespace Restaurant.Repositories
                 roleList.Add(new RoleVM() { RoleName = item.Name, Id = item.Id });
             }
             return roleList;
-
         }
+
         public RoleVM GetRole(string roleName)
         {
             var role = _context.Roles.Where(r => r.Name == roleName).FirstOrDefault();
@@ -56,6 +56,6 @@ namespace Restaurant.Repositories
             _context.SaveChanges();
             return true;
         }
-
     }
+
 }

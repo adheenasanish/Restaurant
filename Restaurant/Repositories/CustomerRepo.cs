@@ -30,7 +30,6 @@ namespace Restaurant.Repositories
                 City = cust.City,
                 ProfileStatus = true,
                 Userid = userId
-                
             };
             db.Customer.Add(customer);
             db.SaveChanges();
