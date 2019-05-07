@@ -5,35 +5,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Models;
 using Restaurant.Repositories;
-using Restaurant.ViewModel;
 
 namespace Restaurant.Controllers
 {
-    public class MenuController : Controller
+    public class FoodItemController : Controller
     {
         private RestaurantContext db;
-        private MenuRepo menuRepo;
-        public MenuController(RestaurantContext db)
+        private FoodItemRepo foodItemRepo;
+        public FoodItemController(RestaurantContext db)
         {
             this.db = db;
-            menuRepo = new MenuRepo(db);
-        }
 
+        }
         public IActionResult Index()
         {
-            IEnumerable<Menu> menuItems = menuRepo.GetAllMenuItems();
-            return View(menuItems);
+            IEnumerable<FoodItem> foodItems = foodItemRepo.GetAllFoodItems();
+            return View(foodItems);
         }
+
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
-
-        //[HttpPost]
-        //public IActionResult Create(MenuVM menuVM)
-        //{
-           
-        //}
+        [HttpPost]
+        public IActionResult Create(FoodItem food)
+        {
+                     
+        }
     }
 }
