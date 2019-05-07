@@ -33,7 +33,7 @@ namespace Restaurant.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateNew(CustomerVM cVm)
+        public IActionResult Create(CustomerVM cVm)
         {
             string userName = HttpContext.User.Identity.Name;
 
