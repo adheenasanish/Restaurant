@@ -31,7 +31,8 @@ namespace Restaurant.Controllers
         [HttpPost]
         public IActionResult Create(FoodItem food)
         {
-            return View();       
+            return View();
+                     
         }
     }
 }
