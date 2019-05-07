@@ -28,7 +28,8 @@ namespace Restaurant.Repositories
                 Address = cust.Address,
                 Street = cust.Street,
                 City = cust.City,
-                ProfileStatus = true
+                ProfileStatus = true,
+                Userid = userId
             };
             db.Customer.Add(customer);
             db.SaveChanges();

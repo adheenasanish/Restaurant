@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Data;
 using Restaurant.Repositories;
@@ -9,6 +10,7 @@ using Restaurant.ViewModel;
 
 namespace Restaurant.Controllers
 {
+    [Authorize]
     public class RoleController : Controller
     {
         ApplicationDbContext _context;
