@@ -28,10 +28,28 @@ namespace Restaurant.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(FoodItem food)
         {
-            return View();
+            bool result = false;
+            if (ModelState.IsValid)
+            {
+                result = foodItemRepo.CreateNew(food);
+            }
+
+            if(result == true)
+            {
+                return RedirectToAction("Index", "FoodItem");
+            }
+            else
+            {
+                return NotFound();
+            }
+          
+           
+
+           // return View();
                      
         }
     }
