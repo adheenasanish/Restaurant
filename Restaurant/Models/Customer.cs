@@ -7,7 +7,8 @@ namespace Restaurant.Models
     {
         public Customer()
         {
-            Orders = new HashSet<Orders>();
+            Orders = new HashSet<OrderVm>();
+            Payment = new HashSet<Payment>();
         }
 
         public int CustomerId { get; set; }
@@ -22,6 +23,7 @@ namespace Restaurant.Models
         public string Userid { get; set; }
 
         public AspNetUsers User { get; set; }
-        public ICollection<Orders> Orders { get; set; }
+        public ICollection<OrderVm> Orders { get; set; }
+        public ICollection<Payment> Payment { get; set; }
     }
 }

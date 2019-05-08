@@ -15,6 +15,7 @@ namespace Restaurant.Models
         {
         }
 
+        public virtual DbSet<Administrator> Administrator { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
@@ -25,11 +26,9 @@ namespace Restaurant.Models
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<FoodItem> FoodItem { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
-        public virtual DbSet<Orders> Orders { get; set; }
-
-        // Unable to generate entity type for table 'dbo.OrderItem'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.Payment'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.administrator'. Please see the warning messages.
+        public virtual DbSet<OrderItem> OrderItem { get; set; }
+        public virtual DbSet<OrderVm> Orders { get; set; }
+        public virtual DbSet<Payment> Payment { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +41,46 @@ namespace Restaurant.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Administrator>(entity =>
+            {
+                entity.HasKey(e => e.AdminId);
+
+                entity.ToTable("administrator");
+
+                entity.Property(e => e.AdminId)
+                    .HasColumnName("admin_id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.FirstName)
+                    .HasColumnName("first_Name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                    .HasColumnName("last_Name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MenuId).HasColumnName("menu_id");
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.UserName)
+                    .HasColumnName("userName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.Administrator)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("FK__administr__menu___693CA210");
+            });
+
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
                 entity.HasIndex(e => e.RoleId);
@@ -241,7 +280,34 @@ namespace Restaurant.Models
                     .HasConstraintName("FK__Menu__food_id__5165187F");
             });
 
-            modelBuilder.Entity<Orders>(entity =>
+            modelBuilder.Entity<OrderItem>(entity =>
+            {
+                entity.Property(e => e.OrderItemId)
+                    .HasColumnName("orderItemId")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.FoodId).HasColumnName("food_id");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_Id");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.Total)
+                    .HasColumnName("total")
+                    .HasColumnType("money");
+
+                entity.HasOne(d => d.Food)
+                    .WithMany(p => p.OrderItem)
+                    .HasForeignKey(d => d.FoodId)
+                    .HasConstraintName("FK__OrderItem__quant__6383C8BA");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderItem)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK__OrderItem__order__6477ECF3");
+            });
+
+            modelBuilder.Entity<OrderVm>(entity =>
             {
                 entity.HasKey(e => e.OrderId);
 
@@ -263,6 +329,40 @@ namespace Restaurant.Models
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK__Orders__customer__619B8048");
+            });
+
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.Property(e => e.PaymentId)
+                    .HasColumnName("payment_id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Amount)
+                    .HasColumnName("amount")
+                    .HasColumnType("money");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+                entity.Property(e => e.PaymentDate)
+                    .HasColumnName("paymentDate")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.PaymentType)
+                    .HasColumnName("paymentType")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Payment)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK__Payment__custome__66603565");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Payment)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK__Payment__order_i__6754599E");
             });
         }
     }

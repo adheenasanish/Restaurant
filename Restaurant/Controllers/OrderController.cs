@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Models;
 using Restaurant.Repositories;
+using Restaurant.ViewModel;
 
 namespace Restaurant.Controllers
 {
@@ -20,7 +21,7 @@ namespace Restaurant.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Orders> orders = orderRepo.GetAllOrder();
+            IEnumerable<OrderVM> orders = orderRepo.GetAllOrder();
             return View(orders);
         }
 
@@ -31,7 +32,7 @@ namespace Restaurant.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Orders order)
+        public IActionResult Create(OrderVM order)
         {
             string userName = HttpContext.User.Identity.Name;
             var customer = db.Customer.Where(c => c.Userid == userName).FirstOrDefault();
