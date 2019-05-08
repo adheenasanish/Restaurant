@@ -7,6 +7,5 @@ namespace Restaurant.ViewModel
 {
     public class OrderVM
     {
-
     }
 }

@@ -8,19 +8,20 @@ using Restaurant.Repositories;
 
 namespace Restaurant.Controllers
 {
-    public class FoodItemController : Controller
+    public class OrderController : Controller
     {
         private RestaurantContext db;
-        private FoodItemRepo foodItemRepo;
-        public FoodItemController(RestaurantContext db)
+        private OrderRepo orderRepo;
+
+        public OrderController(RestaurantContext db)
         {
             this.db = db;
-
+            orderRepo = new OrderRepo(db);
         }
         public IActionResult Index()
         {
-            IEnumerable<FoodItem> foodItems = foodItemRepo.GetAllFoodItems();
-            return View(foodItems);
+            IEnumerable<Orders> orders = orderRepo.GetAllOrder();
+            return View(orders);
         }
 
         [HttpGet]
@@ -30,27 +31,25 @@ namespace Restaurant.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(FoodItem food)
+        public IActionResult Create(Orders order)
         {
+            string userName = HttpContext.User.Identity.Name;
+            var customer = db.Customer.Where(c => c.Userid == userName).FirstOrDefault();
+            int custId = customer.CustomerId;
             bool result = false;
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                result = foodItemRepo.CreateNew(food);
+                result = orderRepo.CreateNew(order, custId);
             }
-
             if(result == true)
             {
-                return RedirectToAction("Index", "FoodItem");
+                return RedirectToAction("Index", "Order");
             }
             else
             {
                 return NotFound();
             }
-          
-           
-
-           // return View();
-                     
         }
+
     }
 }
