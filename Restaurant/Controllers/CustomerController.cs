@@ -13,11 +13,13 @@ namespace Restaurant.Controllers
     {
         private RestaurantContext db;
         private CustomerRepo custRepo;
+        private IServiceProvider _serviceProvider;
 
-        public CustomerController(RestaurantContext db)
+        public CustomerController(RestaurantContext db, IServiceProvider _serviceProvide)
         {
             this.db = db;
-            custRepo = new CustomerRepo(db);
+            this._serviceProvider = _serviceProvider;
+            custRepo = new CustomerRepo(db, _serviceProvider);
         }
         public IActionResult Index()
         {
@@ -46,7 +48,7 @@ namespace Restaurant.Controllers
             
             if( result == true)
             {
-                return RedirectToAction("Index", "Customer");
+                return RedirectToAction("Create", "Order");
             }
             else
             {

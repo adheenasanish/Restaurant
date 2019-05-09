@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Restaurant.Models;
+using Restaurant.Repositories;
 
 namespace Restaurant.Areas.Identity.Pages.Account
 {
@@ -19,16 +21,22 @@ namespace Restaurant.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RestaurantContext _context;
+        private readonly IServiceProvider _serviceProvider;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
+            RestaurantContext context,
+            IServiceProvider serviceProvider,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
+            _serviceProvider = serviceProvider;
             _emailSender = emailSender;
         }
 
@@ -71,6 +79,9 @@ namespace Restaurant.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
+                    userRoleRepo.AddUserRole(user.Email, "Member");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Page(

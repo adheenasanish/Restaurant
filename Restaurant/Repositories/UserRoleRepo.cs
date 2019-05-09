@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Restaurant.Models;
 using Restaurant.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,11 @@ namespace Restaurant.Repositories
     public class UserRoleRepo
     {
         IServiceProvider serviceProvider;
-
-        public UserRoleRepo(IServiceProvider serviceProvider)
+        private readonly RestaurantContext _context;
+        public UserRoleRepo(IServiceProvider serviceProvider, RestaurantContext context)
         {
             this.serviceProvider = serviceProvider;
+            _context = context;
         }
 
         // Assign a role to a user.

@@ -19,44 +19,33 @@ namespace Restaurant.Repositories
         }
         public IEnumerable<OrderVM> GetAllOrder()
         {
-           var allOrders = db.Orders.Include(o => o.OrderItem).Where(o => o.OrderId != 0).ToList();
-            //var allOrderss = db.Orders.Where(o => db.OrderItem.Any(oi => oi.OrderId == o.OrderId)).Select(
-            //    o => new
-            //    {
-            //     OrderId = o.OrderId
+            var allOrders = from oi in db.OrderItem
+                            from o in db.Orders
+                            where o.OrderId == oi.OrderId
+                            select new  { o.PickupTime, oi.OrderId ,oi.Total,oi.Quantity,oi.FoodId,o.OrderDate,o.Customer.FirstName,o.Customer.LastName};
+            OrderVM itemOrders = new OrderVM();
 
 
-
-            //    }).Select(oi => new
-            //    {
-            //      OrderItemId = oi.
-            //    });
-                //Where(o => o.OrderId != 0).ToList();
             foreach (var items in allOrders)
              {
-                var customer = db.Customer.Where(c => c.CustomerId == items.CustomerId).FirstOrDefault();
-                //var food = db.FoodItem.Where()
+                //var customer = db.Customer.Where(c => c.CustomerId == items.CustomerId).FirstOrDefault();
+                var food = db.FoodItem.Where(f => f.FoodId == items.FoodId).FirstOrDefault();
 
-                OrderVM itemOrders = new OrderVM
+                itemOrders = new OrderVM
                 {
-                    OrderId = items.OrderId,
+                    OrderId = Convert.ToInt32(items.OrderId),
                     OrderDate = items.OrderDate,
-                    Qty = items.Qty,
+                    Qty = items.Quantity,
                     PickupTime = items.PickupTime,
-                    LastName = customer.LastName,
-                    FirstName = customer.FirstName,
-                   // FoodId = items.t
-                    
+                    LastName = items.LastName,
+                    FirstName = items.FirstName,
+                    Name = food.Name
+
 
                 };
             }
 
-            OrderVM orders = new OrderVM
-            {
-                //OrderId = allOrders.
-
-            };
-            return orders;
+            yield return itemOrders;
         }
         //Create new order
         public bool CreateNew(OrderVM order,int userId)

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Restaurant.Data;
+using Restaurant.Models;
 using Restaurant.Repositories;
 using Restaurant.ViewModel;
 
@@ -19,6 +20,7 @@ namespace Restaurant.Controllers
     {
         private ApplicationDbContext _context;
         private IServiceProvider _serviceProvider;
+        private readonly RestaurantContext _context1;
 
         public UserRoleController(ApplicationDbContext context,
                                     IServiceProvider serviceProvider)
@@ -37,7 +39,7 @@ namespace Restaurant.Controllers
         // Show all roles for a specific user.
         public async Task<IActionResult> Detail(string userName)
         {
-            UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider);
+            UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context1);
             var roles = await userRoleRepo.GetUserRoles(userName);
             ViewBag.UserName = userName;
             return View(roles);
@@ -94,7 +96,7 @@ namespace Restaurant.Controllers
         [HttpPost]
         public async Task<IActionResult> Assign(UserRoleVM userRoleVM)
         {
-            UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider);
+            UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context1);
 
             if (ModelState.IsValid)
             {

@@ -10,15 +10,20 @@ namespace Restaurant.Repositories
     public class CustomerRepo
     {
         private RestaurantContext db;
-
-        public CustomerRepo(RestaurantContext db)
+        private IServiceProvider _serviceProvider;
+        private readonly RestaurantContext _context;
+        public CustomerRepo(RestaurantContext db, IServiceProvider serviceProvider)
         {
             this.db = db;
+            _serviceProvider = serviceProvider;
         }
         
         // Add new customers
         public bool addNewCustomer(CustomerVM cust,string userId)
         {
+            //UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
+            //var addUR = userRoleRepo.AddUserRole(userId,
+            //                                                "Member");
             Customer customer = new Customer
             {
                 LastName = cust.LastName,
