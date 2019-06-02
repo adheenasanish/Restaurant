@@ -34,8 +34,24 @@
                         {
                             @*<li><a asp-area="" asp-controller="Customer" asp-action="Index">Home</a></li>*@
                             <li><a asp-area="" asp-controller="Customer" asp-action="Create">Create</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                  
+                                    <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "breakfast" },null)</li>
+                                    <li>@Html.ActionLink("Beef", "GetItems", "order", new { selectedMenuItem = "beef" }, null)</li>
+                                    <li>@Html.ActionLink("Chiken", "GetItems", "order", new { selectedMenuItem = "Chiken" }, null)</li>
+                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Sandwiches & Wraps</a></li>
+                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Salad</a></li>
+                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Snack & Side</a></li>
+                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Beverages</a></li>
+                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">View all</a></li>
+
+                                </ul>
+                            </li>
+                            @*<li><a asp-area="" asp-controller="Order" asp-action="GetItems">GetItem</a></li>*@
                         }
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+
 
                         @if (User.IsInRole("Admin"))
                         {
@@ -47,6 +63,7 @@
                                 </a>
                             </li>
                             <li><a asp-area="" asp-controller="FoodItem" asp-action="Index">Item List</a></li>
+                            <li><a asp-area="" asp-controller="FoodItem" asp-action="Create">Add Food Item</a></li>
                             <li><a asp-area="" asp-controller="Order" asp-action="Index">Orders List</a></li>
                             <li><a asp-area="" asp-controller="Menu" asp-action="Index">Menu</a></li>
 
@@ -92,3 +109,36 @@
         @RenderSection("Scripts", required: false)
     </body>
     </html>
+
+<script>
+    window.onload = function () {
+        var url = '@Url.Action("GetItems","Order")';
+       
+        var states = $('#StateName');
+        var city = $('#CityId');
+        $('#CountryName').change(function () {
+            var country = $(this).val();
+            $.getJSON(url, { id: country }, function (response) {
+                states.empty().append($('<option></option>').val('').text('Select State'));
+                $.each(response, function (index, item) {
+                    states.append($('<option></option>').val(item.value).text(item.text));
+                });
+            });
+        });
+
+
+        $('#StateName').change(function () {
+            var state = $(this).val();
+            $.getJSON(url1, { id: $(this).val() }, function (response) {
+                city.empty().append($('<option></option>').val('').text('Select City'));
+                $.each(response, function (index, item) {
+                    city.append($('<option></option>').val(item.value).text(item.text));
+                    //alert(item.value)
+                });
+            });
+        });
+
+    }
+
+
+</script>

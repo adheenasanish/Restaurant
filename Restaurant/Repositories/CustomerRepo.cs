@@ -21,9 +21,9 @@ namespace Restaurant.Repositories
         // Add new customers
         public bool addNewCustomer(CustomerVM cust,string userId)
         {
-            //UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
-            //var addUR = userRoleRepo.AddUserRole(userId,
-            //                                                "Member");
+            UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
+            var addUR = userRoleRepo.AddUserRole(userId,
+                                                            "Member");
             Customer customer = new Customer
             {
                 LastName = cust.LastName,
@@ -34,7 +34,8 @@ namespace Restaurant.Repositories
                 Street = cust.Street,
                 City = cust.City,
                 ProfileStatus = true,
-                Userid = userId
+                UserId = userId
+               
             };
             db.Customer.Add(customer);
             db.SaveChanges();

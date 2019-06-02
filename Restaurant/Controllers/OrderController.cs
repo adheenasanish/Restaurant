@@ -17,7 +17,7 @@ namespace Restaurant.Controllers
         public OrderController(RestaurantContext db)
         {
             this.db = db;
-            orderRepo = new OrderRepo(db);
+           
         }
         public IActionResult Index()
         {
@@ -31,26 +31,62 @@ namespace Restaurant.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Create(OrderVM order)
+        public IActionResult GetItems(string selectedMenuItem)
         {
-            string userName = HttpContext.User.Identity.Name;
-            var customer = db.Customer.Where(c => c.Userid == userName).FirstOrDefault();
-            int custId = customer.CustomerId;
-            bool result = false;
-            if(ModelState.IsValid)
+            orderRepo = new OrderRepo(db);
+            IEnumerable<FoodItem> foodItems = orderRepo.GetAllItems(selectedMenuItem);
+          
+            List<DisplayVM> itemName = new List<DisplayVM>();
+          
+            //string[,] viewArray = new string[itemName, itemImage] {" ",""} ;
+            //int count = itemName.Count;
+            
+            foreach (FoodItem foodItem in foodItems)
             {
-                result = orderRepo.CreateNew(order, custId);
+                string itemType = foodItem.Name;
+                string itemImage = foodItem.Image;
+                decimal price =Convert.ToDecimal( foodItem.UnitPrice);
+                DisplayVM displayVM = new DisplayVM
+                {
+                    Itemname = itemType,
+                    ItemImage = itemImage,
+                    ItemPrice = price
+
+                };
+                itemName.Add(displayVM);
             }
-            if(result == true)
-            {
-                return RedirectToAction("Index", "Order");
-            }
-            else
-            {
-                return NotFound();
-            }
+            //itemName.Add(itemName.)
+            return View(itemName);
         }
+        //[HttpGet]
+        //public IActionResult showAll()
+        //{
+        //    orderRepo = new OrderRepo(db);
+        //    IEnumerable<FoodItem> foodItems = orderRepo.GetAllItems();
+        //    return View(foodItems);
+           
+           
+        //}
+        //[HttpPost]
+        //public IActionResult Create(OrderVM order)
+        //{
+           // string userName = HttpContext.User.Identity.Name;
+           //// var customer = db.Customer.Where(c => c.Userid == userName).FirstOrDefault();
+           //// int custId = customer.CustomerId;
+           // bool result = false;
+           // if(ModelState.IsValid)
+           // {
+           //     result = orderRepo.CreateNew(order, custId);
+           // }
+           // if(result == true)
+           // {
+           //     return RedirectToAction("Index", "Order");
+           // }
+           // else
+           // {
+           //     return NotFound();
+           // }
+        //}
 
     }
 }

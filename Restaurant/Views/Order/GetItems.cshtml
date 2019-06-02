@@ -1,0 +1,47 @@
+﻿@model List<Restaurant.ViewModel.DisplayVM>
+
+@{
+    ViewData["Title"] = "GetItems";
+}
+
+<h2>GetItems</h2>
+
+
+<table class="table table-bordered ">
+    <thead>
+        <tr>
+            <th class="text-center">
+                Name
+            </th>
+            <th>
+                
+            </th>
+            <th class="text-center">
+               Price
+            </th>
+           
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Itemname)
+            </td>
+            <td >
+                <img src="@Html.DisplayFor(modelItem => item.ItemImage)" width="230" height="230" />
+              
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemPrice)
+            </td>
+           
+            @*<td>
+                <a asp-action="Edit" asp-route-id="@item.FoodId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>
+            </td>*@
+        </tr>
+}
+    </tbody>
+</table>

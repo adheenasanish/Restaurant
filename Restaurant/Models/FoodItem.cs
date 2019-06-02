@@ -16,6 +16,7 @@ namespace Restaurant.Models
         public string Image { get; set; }
         public int? Quantity { get; set; }
         public decimal? UnitPrice { get; set; }
+        public string Type { get; set; }
         public string ItemCategory { get; set; }
 
         public ICollection<Menu> Menu { get; set; }

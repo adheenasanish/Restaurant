@@ -10,9 +10,9 @@ namespace Restaurant.Models
         public decimal? Amount { get; set; }
         public string PaymentType { get; set; }
         public int? CustomerId { get; set; }
-        public int? OrderId { get; set; }
+        public int OrderId { get; set; }
 
         public Customer Customer { get; set; }
-        public OrderVm Order { get; set; }
+        public Orders Order { get; set; }
     }
 }

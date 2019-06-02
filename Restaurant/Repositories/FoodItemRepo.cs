@@ -1,6 +1,9 @@
-﻿using Restaurant.Models;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Restaurant.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,10 +12,12 @@ namespace Restaurant.Repositories
     public class FoodItemRepo
     {
         private RestaurantContext db;
+        private readonly IHostingEnvironment hostingEnvironment;
 
         public FoodItemRepo(RestaurantContext db)
         {
             this.db = db;
+          
         }
 
         //Get all Food items
@@ -24,17 +29,39 @@ namespace Restaurant.Repositories
         }
 
         //Create new Item
-        public bool CreateNew(FoodItem food)
+        public bool CreateNew(FoodItem food, string image)
         {
+            //if (imageUpload1 != null)
+            //{
+            //    var fileName = Path.Combine(hostingEnvironment.WebRootPath, Path.GetFileName(imageUpload1.FileName));
+            //    imageUpload1.CopyTo(new FileStream(fileName, FileMode.Create));
+
+            //    //ViewData["fileLocation"] = fileName;
+            //    food.Image = "/" + Path.GetFileName(imageUpload1.FileName);
+            //    //newStay.Image = "/" + Path.GetFileName(imageUpload1.FileName);
+
+            //}
+
             FoodItem NewFoodItem = new FoodItem
             {
                     Name =  food.Name,
-                    Image = food.Image,
+                    Image = image,
                     Quantity = food.Quantity,
                     UnitPrice =food.UnitPrice,
-                    ItemCategory = food.ItemCategory
+                    ItemCategory = food.ItemCategory,
+                    Type = food.Type
             };
             db.FoodItem.Add(NewFoodItem);
+            db.SaveChanges();
+
+            //Menu menu = new Menu
+            //{
+            //    Price = food.UnitPrice,
+
+
+            //}
+
+            //db.FoodItem.Add(NewFoodItem);
            return true;
         }
 

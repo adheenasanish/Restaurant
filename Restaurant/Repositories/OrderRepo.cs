@@ -50,7 +50,7 @@ namespace Restaurant.Repositories
         //Create new order
         public bool CreateNew(OrderVM order,int userId)
         {
-            OrderVm newOrder = new OrderVm
+            OrderVM newOrder = new OrderVM
             {
                 OrderDate = DateTime.Now,
                 PickupTime = order.PickupTime,
@@ -71,10 +71,16 @@ namespace Restaurant.Repositories
 
             };
 
-            db.Orders.Add(newOrder);
+            //db.Orders.Add(newOrder);
             db.OrderItem.Add(orderItem);
             db.SaveChanges();
             return true;
+        }
+
+        public IEnumerable<FoodItem> GetAllItems(string selectedMenuItem)
+        {
+            var allItems = db.FoodItem.Where(f => f.Type == selectedMenuItem);
+            return allItems;
         }
     }
 }

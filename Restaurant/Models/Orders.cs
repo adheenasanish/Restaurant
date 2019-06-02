@@ -3,12 +3,11 @@ using System.Collections.Generic;
 
 namespace Restaurant.Models
 {
-    public partial class OrderVm
+    public partial class Orders
     {
-        public OrderVm()
+        public Orders()
         {
             OrderItem = new HashSet<OrderItem>();
-            Payment = new HashSet<Payment>();
         }
 
         public int OrderId { get; set; }
@@ -18,7 +17,7 @@ namespace Restaurant.Models
         public int? CustomerId { get; set; }
 
         public Customer Customer { get; set; }
+        public Payment Payment { get; set; }
         public ICollection<OrderItem> OrderItem { get; set; }
-        public ICollection<Payment> Payment { get; set; }
     }
 }

@@ -39,10 +39,13 @@ namespace Restaurant.Controllers
         {
             string userName = HttpContext.User.Identity.Name;
 
+            var userData = db.AspNetUsers.Where(a => a.UserName == userName).FirstOrDefault();
+            var id = userData.Id;
+
             bool result = false;
             if (ModelState.IsValid)
             {
-                result = custRepo.addNewCustomer(cVm,userName);
+                result = custRepo.addNewCustomer(cVm,id);
 
             }  
             
