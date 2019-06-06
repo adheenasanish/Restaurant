@@ -82,5 +82,19 @@ namespace Restaurant.Repositories
             var allItems = db.FoodItem.Where(f => f.Type == selectedMenuItem);
             return allItems;
         }
+
+        public DisplayVM GetDetails(int id)
+        {
+            var details = db.FoodItem.Where(f => f.FoodId == id).FirstOrDefault();
+            
+            DisplayVM displayVM = new DisplayVM
+            {
+                ItemId = details.FoodId,
+                ItemImage = details.Image,
+                Itemname = details.Name,
+                ItemPrice = Convert.ToDecimal(details.UnitPrice)
+            };
+            return (displayVM);
+        }
     }
 }

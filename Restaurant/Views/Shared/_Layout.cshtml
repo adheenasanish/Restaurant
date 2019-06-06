@@ -10,10 +10,15 @@
       <link rel="stylesheet" href="~/css/site.css" /> 
     </environment>
     <environment exclude="Development">
-          <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> 
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link href="~/lib/fontawesome-free-5.8.2-web/css/all.css" />
+        @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
     </environment>
     </head>
     <body>
@@ -37,19 +42,21 @@
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                  
-                                    <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "breakfast" },null)</li>
+
+                                    <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "breakfast" }, null)</li>
                                     <li>@Html.ActionLink("Beef", "GetItems", "order", new { selectedMenuItem = "beef" }, null)</li>
-                                    <li>@Html.ActionLink("Chiken", "GetItems", "order", new { selectedMenuItem = "Chiken" }, null)</li>
+                                    <li>@Html.ActionLink("Chicken", "GetItems", "order", new { selectedMenuItem = "Chicken" }, null)</li>
                                     <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Sandwiches & Wraps</a></li>
                                     <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Salad</a></li>
                                     <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Snack & Side</a></li>
                                     <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Beverages</a></li>
-                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">View all</a></li>
+
 
                                 </ul>
                             </li>
+                            <li><a href="#cart"><i class="fas fa-shopping-cart"></i></a></li>
                             @*<li><a asp-area="" asp-controller="Order" asp-action="GetItems">GetItem</a></li>*@
+                            
                         }
 
 
@@ -65,7 +72,7 @@
                             <li><a asp-area="" asp-controller="FoodItem" asp-action="Index">Item List</a></li>
                             <li><a asp-area="" asp-controller="FoodItem" asp-action="Create">Add Food Item</a></li>
                             <li><a asp-area="" asp-controller="Order" asp-action="Index">Orders List</a></li>
-                            <li><a asp-area="" asp-controller="Menu" asp-action="Index">Menu</a></li>
+                            @*<li><a asp-area="" asp-controller="Menu" asp-action="Index">Menu</a></li>*@
 
                         }
 

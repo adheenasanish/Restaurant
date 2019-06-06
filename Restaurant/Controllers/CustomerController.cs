@@ -78,6 +78,14 @@ namespace Restaurant.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            var result = custRepo.GetCustomer(Convert.ToInt32(id));
+
+            return View(result);
+        }
+
         [HttpDelete]
         public IActionResult Delete(int id)
         {

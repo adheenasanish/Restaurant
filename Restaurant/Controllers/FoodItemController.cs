@@ -69,5 +69,38 @@ namespace Restaurant.Controllers
            // return View();
                      
         }
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            foodItemRepo = new FoodItemRepo(db);
+            FoodItem details = foodItemRepo.GetDetails(id);
+
+            return View(details);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            foodItemRepo = new FoodItemRepo(db);
+            FoodItem details = foodItemRepo.GetDetails(id);
+            return View(details);
+
+        }
+        [HttpPost]
+        public IActionResult Edit(FoodItem food)
+        {
+            foodItemRepo = new FoodItemRepo(db);
+            //if( food != Null)
+            bool result = foodItemRepo.Update(food);
+            return View();
+
+        }
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            foodItemRepo = new FoodItemRepo(db);
+            return View();
+
+        }
     }
 }

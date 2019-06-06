@@ -43,11 +43,24 @@ namespace Restaurant.Repositories
         }
 
         // Get a customer
-        public Customer GetCustomer(int id)
+        public CustomerVM GetCustomer(int id)
         {
              var customer = db.Customer.Where(c => c.CustomerId == id).FirstOrDefault();
 
-             return customer;
+            CustomerVM customerVM = new CustomerVM
+            {
+                LastName = customer.LastName,
+                FirstName = customer.FirstName,
+                Email = customer.Email,
+                Phone = customer.Phone,
+                Address = customer.Address,
+                Street = customer.Street,
+                City = customer.City,
+                ProfileStatus = customer.ProfileStatus
+            };
+
+
+             return customerVM;
         }
 
         //Get all customers

@@ -18,9 +18,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Image)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.UnitPrice)
             </th>
@@ -40,11 +38,10 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image)
+                <img src="@Html.DisplayFor(modelItem => item.Image)" width="230" height="230" style="border:1px solid gray" ; />
+          
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.UnitPrice)
             </td>

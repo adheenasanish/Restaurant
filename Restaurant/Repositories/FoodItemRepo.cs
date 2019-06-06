@@ -65,5 +65,21 @@ namespace Restaurant.Repositories
            return true;
         }
 
+        public FoodItem GetDetails(int id)
+        {
+            var details = db.FoodItem.Where(f => f.FoodId == id).FirstOrDefault();
+            return details;
+        }
+
+        public bool Update(FoodItem food)
+        {
+            db.FoodItem.Update(food);
+            db.SaveChanges();
+            return true;
+        }
+        //public bool remove(int id)
+        //{
+        //    //db.FoodItem.Remove
+        //}
     }
 }

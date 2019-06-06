@@ -1,0 +1,78 @@
+﻿@model Restaurant.ViewModel.DisplayVM
+   
+
+    @{
+        ViewData["Title"] = "Details";
+    }
+
+@{
+    int newVal = 0;
+}
+    <h2>Details</h2>
+
+    <div>
+        <h4>DisplayVM</h4>
+        <hr />
+        <table class="table table-bordered ">
+            <tr>
+                <td><img src="@Html.DisplayFor(model => model.ItemImage)" width="230" height="230" style = "border:1px solid gray" ; /></td>
+                <td>
+                    <dl class="dl-horizontal">
+
+                        <dt class="text-left">
+                            Item :
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Itemname)
+                        </dd>
+                        @*@Html.DropDownList("CountryName", new SelectList( ViewBag.CountryName,"Value", "Text"), "Select Country",
+                            new { @class = "form-control" })*@
+                        <dt class="text-left">
+                            Unit Price :
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.ItemPrice)
+                        </dd>
+                    </dl>
+
+                    <table>
+                        <tr>
+                            <td>
+                                Qty:
+                            </td>
+                            <td style="border:1px solid black; width:40px; ">@newVal </td>
+                            <td><i class="fa fa-user"></i> </td>
+                            <td><a href="#f" onclick="addFunction(@newVal)" id="add"><i class="fab fa-github-square"></i> +</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total:
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a class="btn btn-info " href="#cart">Add to Cart</a> </td>
+                        </tr>
+                       
+
+                    </table>
+                  
+
+
+                </td>
+            </tr>
+        </table>
+       
+
+    </div>
+    <div>
+        @*@Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
+        <a class="btn btn-info" asp-action="GetItems"> << Back</a>
+    </div>
+<script>
+    
+   
+</script>
+
+

@@ -29,19 +29,20 @@
                 @Html.DisplayFor(modelItem => item.Itemname)
             </td>
             <td >
-                <img src="@Html.DisplayFor(modelItem => item.ItemImage)" width="230" height="230" />
+                <img src="@Html.DisplayFor(modelItem => item.ItemImage)" width="230" height="230" style = "border:1px solid gray" ;/>
               
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ItemPrice)
             </td>
            
-            @*<td>
-                <a asp-action="Edit" asp-route-id="@item.FoodId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>
-            </td>*@
+            <td>
+                <a class = " btn btn-info btn-block"asp-action="Details" asp-route-id=@item.ItemId>Order</a> 
+                @*<a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>*@
+            </td>
         </tr>
 }
     </tbody>
 </table>
+

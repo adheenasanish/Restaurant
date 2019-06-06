@@ -50,13 +50,23 @@ namespace Restaurant.Controllers
                 {
                     Itemname = itemType,
                     ItemImage = itemImage,
-                    ItemPrice = price
+                    ItemPrice = price,
+                    ItemId = foodItem.FoodId
 
                 };
                 itemName.Add(displayVM);
             }
             //itemName.Add(itemName.)
             return View(itemName);
+        }
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            orderRepo = new OrderRepo(db);
+            DisplayVM fItem = orderRepo.GetDetails(id);
+
+            return View(fItem);
         }
         //[HttpGet]
         //public IActionResult showAll()

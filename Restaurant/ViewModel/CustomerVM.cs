@@ -8,7 +8,7 @@ namespace Restaurant.ViewModel
 {
     public class CustomerVM
     {
-
+        public int customer_Id { get; set; }
         [DisplayName("Last Name")]
         public string LastName { get; set; }
         [DisplayName("First Name")]
@@ -18,6 +18,7 @@ namespace Restaurant.ViewModel
         public string Address { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
+        [DisplayName("Profile Status")]
         public bool? ProfileStatus { get; set; }
     }
 }
