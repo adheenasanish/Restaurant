@@ -51,7 +51,8 @@ namespace Restaurant.Controllers
                     Itemname = itemType,
                     ItemImage = itemImage,
                     ItemPrice = price,
-                    ItemId = foodItem.FoodId
+                    ItemId = foodItem.FoodId,
+                    Type = foodItem.Type
 
                 };
                 itemName.Add(displayVM);
@@ -97,6 +98,11 @@ namespace Restaurant.Controllers
            //     return NotFound();
            // }
         //}
+        //[HttpPost]
+        public IActionResult addToCart(int id,string itemname,string type,decimal itemPrice,decimal total,int qty)
+        {
+            return View();
+        }
 
     }
 }

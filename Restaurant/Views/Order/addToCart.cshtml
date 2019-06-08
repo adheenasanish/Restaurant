@@ -1,0 +1,60 @@
+﻿@model Restaurant.ViewModel.DisplayVM
+
+@{
+    ViewData["Title"] = "addToCart";
+}
+
+<h2>addToCart</h2>
+
+<div>
+    <h4>DisplayVM</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ItemId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Itemname)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Itemname)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemImage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ItemImage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemPrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ItemPrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Qty)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Qty)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

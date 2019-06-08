@@ -3,9 +3,17 @@
 @{
     ViewData["Title"] = "GetItems";
 }
+@{
+    string type = "";
+}
 
-<h2>GetItems</h2>
 
+@foreach (var item in Model)
+{
+    type = item.Type;
+
+}
+<h2>@type</h2>
 
 <table class="table table-bordered ">
     <thead>
@@ -14,35 +22,36 @@
                 Name
             </th>
             <th>
-                
+
             </th>
             <th class="text-center">
-               Price
+                Price
             </th>
-           
+
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Itemname)
-            </td>
-            <td >
-                <img src="@Html.DisplayFor(modelItem => item.ItemImage)" width="230" height="230" style = "border:1px solid gray" ;/>
-              
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemPrice)
-            </td>
-           
-            <td>
-                <a class = " btn btn-info btn-block"asp-action="Details" asp-route-id=@item.ItemId>Order</a> 
-                @*<a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>*@
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Itemname)
+                </td>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.ItemImage)" width="230" height="230" style="border:1px solid gray" ; />
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ItemPrice)
+                </td>
+
+                <td>
+                    <a class=" btn btn-info btn-block" asp-action="Details" asp-route-id=@item.ItemId>Order</a>
+                    @*<a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>*@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 

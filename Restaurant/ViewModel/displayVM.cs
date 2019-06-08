@@ -11,7 +11,9 @@ namespace Restaurant.ViewModel
         public string Itemname { get; set; }
         public string ItemImage { get; set; }
         public decimal ItemPrice { get; set; }
-       
+        public string Type { get; set; }    
+        public decimal Total { get; set; }
+        public int Qty { get; set; }
 
     }
 }
