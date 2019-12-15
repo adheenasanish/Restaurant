@@ -19,7 +19,7 @@ namespace Restaurant.Repositories
         }
         
         // Add new customers
-        public bool addNewCustomer(CustomerVM cust,string userId)
+        public bool addNewCustomer(CustomerVM cust,string email, string userId)
         {
             UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
             var addUR = userRoleRepo.AddUserRole(userId,
@@ -28,7 +28,7 @@ namespace Restaurant.Repositories
             {
                 LastName = cust.LastName,
                 FirstName = cust.FirstName,
-                Email = cust.Email,
+                Email = email,
                 Phone = cust.Phone,
                 Address = cust.Address,
                 Street = cust.Street,

@@ -41,25 +41,29 @@ namespace Restaurant.Repositories
             //    //newStay.Image = "/" + Path.GetFileName(imageUpload1.FileName);
 
             //}
-
+            var category = db.FoodCategory.Where(fc => fc.CategoryId == Convert.ToInt32(food.ItemCategory)).FirstOrDefault();
             FoodItem NewFoodItem = new FoodItem
             {
                     Name =  food.Name,
                     Image = image,
                     Quantity = food.Quantity,
                     UnitPrice =food.UnitPrice,
-                    ItemCategory = food.ItemCategory,
-                    Type = food.Type
+                    ItemCategory = category.CategoryName,
+                    FoodTypeId = food.FoodTypeId
+                   // Type = food.Type
             };
+
+            var typeName = db.FoodType.Where(ft => ft.FoodTypeId == food.FoodTypeId).FirstOrDefault();
+            FoodType NewType = new FoodType
+            {
+                TypeName = typeName.TypeName,
+                CategoryId = Convert.ToInt32(food.ItemCategory)
+            };
+            db.FoodType.Add(NewType);
             db.FoodItem.Add(NewFoodItem);
             db.SaveChanges();
 
-            //Menu menu = new Menu
-            //{
-            //    Price = food.UnitPrice,
-
-
-            //}
+           
 
             //db.FoodItem.Add(NewFoodItem);
            return true;
@@ -77,9 +81,17 @@ namespace Restaurant.Repositories
             db.SaveChanges();
             return true;
         }
-        //public bool remove(int id)
-        //{
-        //    //db.FoodItem.Remove
-        //}
+        public bool Remove(int id)
+        {
+            var entry = db.FoodItem.Where(f => f.FoodId == id).FirstOrDefault();
+            if(entry != null)
+            {
+                db.FoodItem.Remove(entry);
+                db.SaveChanges();
+            }           
+
+            //db.FoodItem.Remove(id);
+            return true;
+        }
     }
 }

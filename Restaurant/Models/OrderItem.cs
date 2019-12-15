@@ -10,6 +10,8 @@ namespace Restaurant.Models
         public int? OrderId { get; set; }
         public decimal? Total { get; set; }
         public int? Quantity { get; set; }
+        public decimal? Hstgst { get; set; }
+        public decimal? Pst { get; set; }
 
         public FoodItem Food { get; set; }
         public Orders Order { get; set; }

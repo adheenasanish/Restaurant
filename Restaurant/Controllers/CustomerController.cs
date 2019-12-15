@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Models;
 using Restaurant.Repositories;
@@ -39,13 +40,15 @@ namespace Restaurant.Controllers
         {
             string userName = HttpContext.User.Identity.Name;
 
+            var ss = HttpContext.Session.GetInt32("SessionKeyName");
+
             var userData = db.AspNetUsers.Where(a => a.UserName == userName).FirstOrDefault();
             var id = userData.Id;
 
             bool result = false;
             if (ModelState.IsValid)
             {
-                result = custRepo.addNewCustomer(cVm,id);
+                result = custRepo.addNewCustomer(cVm,userName,id);
 
             }  
             

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +25,7 @@ namespace Restaurant.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RestaurantContext _context;
         private readonly IServiceProvider _serviceProvider;
+        private RestaurantContext db;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -78,7 +81,9 @@ namespace Restaurant.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("User created a new account with password.");               
+                       
+        
 
                     UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
                     userRoleRepo.AddUserRole(user.Email, "Member");
@@ -94,6 +99,7 @@ namespace Restaurant.Areas.Identity.Pages.Account
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    HttpContext.Session.SetInt32("status", 0);
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

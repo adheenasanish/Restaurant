@@ -13,6 +13,7 @@ namespace Restaurant.ViewModel
         public decimal ItemPrice { get; set; }
         public string Type { get; set; }    
         public decimal Total { get; set; }
+        public string Category { get; set; }
         public int Qty { get; set; }
 
     }

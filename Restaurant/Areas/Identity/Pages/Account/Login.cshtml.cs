@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Restaurant.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Restaurant.Areas.Identity.Pages.Account
 {
@@ -17,11 +19,13 @@ namespace Restaurant.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private RestaurantContext db;      
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, RestaurantContext db)
         {
             _signInManager = signInManager;
             _logger = logger;
+            this.db = db;
         }
 
         [BindProperty]
@@ -77,7 +81,23 @@ namespace Restaurant.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    int details = db.Customer.Where(c => c.Email == Input.Email).Count();
+                    if (details == 1)
+                    {
+                        //ViewData 
+                        //HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(555));
+                        ViewData["status"] = 1;
+                        
+                    }
+                    else
+                    {
+                        //HttpContext.Session.SetInt32("SessionKeyName", 123);
+                        ViewData["status"] = 0;
+                    }
+                   // var ss = HttpContext.Session.GetInt32("SessionKeyName");
                     _logger.LogInformation("User logged in.");
+                    //if(Input.Email == )
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

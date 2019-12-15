@@ -1,0 +1,16 @@
+.myInput {
+    border-style: none;
+
+}
+
+    .myInput:hover {
+        border-style: none;
+    }
+
+    .myInput:focus {
+        border-style: none;
+    }
+
+    .bodyBackground{
+        background-color:black;
+    }

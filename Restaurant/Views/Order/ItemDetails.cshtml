@@ -1,0 +1,147 @@
+﻿@model Restaurant.ViewModel.DisplayVM
+
+@{
+    ViewData["Title"] = "ItemDetails";
+}
+
+<h2>ItemDetails</h2>
+
+<h4>DisplayVM</h4>
+<hr />
+<div class="row">
+    <form asp-action="ItemDetails">
+        <div class="col-md-4">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" class="form-control" asp-for="ItemId" />
+            </div>
+            <div class="form-group">
+                <img src="@Html.DisplayFor(model => model.ItemImage)" width="230" height="230" style="border:1px solid gray" ; />
+                @*<label asp-for="ItemId" class="control-label"></label>
+                <input asp-for="ItemId" class="form-control" />
+                <span asp-validation-for="ItemId" class="text-danger"></span>*@
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+
+                <label asp-for="Itemname" class="control-label"></label>
+                @*@Html.TextBoxFor(model => model.Itemname, new { @class = "form-control" })*@
+                @*<input type="text" class="form-control"  value=@Html.DisplayFor(model => model.Itemname) asp-for="Itemname" />*@
+
+                @Html.DisplayFor(model => model.Itemname)
+
+                <span asp-validation-for="Itemname" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ItemPrice" class="control-label"></label>
+                @Html.TextBoxFor(model => model.ItemPrice, new { @class = "form-control", id = "unitPrice", style = "display : none;" })
+                @Html.DisplayFor(model => model.ItemPrice)
+                <input type="hidden" id="unitPrice" class="form-control" value=@Html.DisplayFor(model => model.ItemPrice) asp-for="ItemPrice" />
+                @Html.HiddenFor(model => model.ItemId)
+                <span asp-validation-for="ItemPrice" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <input asp-for="Type" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>*@
+
+            <div class="form-group">
+                <label asp-for="Qty" class="control-label"></label>
+                <input id="number" class="myInput" value="1" size="10" asp-for="Qty" style="width:30%; padding-left:5px;" />
+                @*@Html.TextBoxFor(model => model.Qty, new { @class = "form-control", id = "number" })*@
+
+
+                @*<input type="text" class="form-control" id="number" value="1" size="8" asp-for="Qty" />*@
+
+
+                <span onclick="addFunc()" id="add"><i class="fas fa-plus-circle fa-1x"></i> </span>
+                <span onclick="minusFunc()" id="minus"><i class="fas fa-minus-circle"></i> </span>
+                @*<input asp-for="Qty" class="form-control" />*@
+                <span asp-validation-for="Qty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Total" class="control-label"></label>
+                @*@{
+            decimal totalVal = Model.ItemPrice;
+            //decimal totalVal = 0;
+
+        }*@
+
+                @*@Html.TextBoxFor(@totalVal, new { @class = "form-control", id = "total", @Value = "model => model.ItemPrice" })*@
+
+                @Html.TextBoxFor(model => model.ItemPrice, new { @class = "myInput ", id = "total",
+               style = "width:20%; padding-left:5px; border-style:none; border-color:white;"})
+
+                @*<input id="total" class="myInput" value=@Html.DisplayFor(model => model.ItemPrice) size="8" asp-for="Total" style="width:35%; padding-left:5px;" />*@
+                @*@Html.DisplayFor(model => model.ItemPrice)*@
+                @*<input asp-for="Total" class="form-control" />*@
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Add to Cart" class=" btn btn-info" />  
+                @*<a class=" btn btn-info btn-block" asp-action="ItemDetails" asp-route-id=@item.ItemId>Order</a>*@
+            </div>
+        </div>
+    </form>
+</div>
+
+@*</div>*@
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    window.onload = function () {
+
+        document.getElementById("add").onclick = function () {
+            var value = parseInt(document.getElementById('number').value, 10);
+            //value = isNaN(value) ? 0 : value;
+            value++;
+            document.getElementById('number').value = value;
+            var price = parseInt(document.getElementById('total').value, 10);
+
+            var unitPrice = parseFloat(document.getElementById('unitPrice').value, 10);
+            unitPrice = value * unitPrice;
+            document.getElementById('total').value = unitPrice;
+
+        }
+
+        document.getElementById("minus").onclick = function () {
+            var value = parseInt(document.getElementById('number').value, 10);
+            value = isNaN(value) ? 0 : value;
+            value--;
+            if (value < 1) {
+                value = 1;
+            }
+            //alert(value);
+            var unitPrice = parseFloat(document.getElementById('unitPrice').value, 10);
+            unitPrice = value * unitPrice;
+
+            document.getElementById('total').value = unitPrice;
+
+            document.getElementById('number').value = value;
+        }
+
+        //document.getElementById("button1").onclick = function () {
+        //    alert('hi');
+
+        //    p = ParseInt(document.getElementById('total').value);
+        //}
+
+
+
+    }
+
+</script>
+
+

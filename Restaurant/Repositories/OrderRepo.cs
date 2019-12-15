@@ -48,30 +48,40 @@ namespace Restaurant.Repositories
             yield return itemOrders;
         }
         //Create new order
-        public bool CreateNew(OrderVM order,int userId)
+        public bool CreateNew(DisplayVM order,int userId)
         {
-            OrderVM newOrder = new OrderVM
-            {
-                OrderDate = DateTime.Now,
-                PickupTime = order.PickupTime,
-                Qty = order.Qty,
-                CustomerId = userId
-            };
+            decimal GstOrHst = 8;
+            decimal PST = 0;
+           // Orders newOrder = new Orders
+           // {
+            //    OrderDate = DateTime.Now,
+            //    // PickupTime = order.PickupTime,
+            //    Qty = order.Qty,
+            //    CustomerId = userId
+            //};
+            //db.Orders.Add(newOrder);
+            //db.SaveChanges();
+            //int id = newOrder.OrderId;
+            var itemDetails = db.FoodItem.Where(food => food.FoodId == order.ItemId).FirstOrDefault();
+           // decimal price = Convert.ToDecimal(itemDetails.UnitPrice);
+            decimal total =Convert.ToDecimal( order.Qty) * order.ItemPrice;
+            DateTime dt = DateTime.Now;
+            var foodTypeDetails = db.FoodType.Where(ftd => ftd.FoodTypeId == itemDetails.FoodTypeId).FirstOrDefault();
+            var categoryDetails = db.FoodCategory.Where(cd => cd.CategoryId == foodTypeDetails.CategoryId).FirstOrDefault();
 
-            var itemDetails = db.FoodItem.Where(food => food.FoodId == order.FoodId).FirstOrDefault();
-            decimal price = Convert.ToDecimal(itemDetails.UnitPrice);
-            decimal total =Convert.ToDecimal( order.Qty) * price;
+            // var orderedItem = db.Orders.Where(o => o.OrderDate == dt && o.Qty == order.Qty && o.CustomerId == userId ).FirstOrDefault();
 
-           OrderItem orderItem = new OrderItem
+            OrderItem orderItem = new OrderItem
             {
-                OrderId = order.OrderId,
-                FoodId = order.FoodId,
+                //OrderId = id,
+                FoodId = order.ItemId,
                 Quantity = order.Qty,
                 Total = total
+                //Hstgst = total * (GstOrHst / 100),
+                //Pst = total * PST
+
 
             };
-
-            //db.Orders.Add(newOrder);
             db.OrderItem.Add(orderItem);
             db.SaveChanges();
             return true;
@@ -79,7 +89,8 @@ namespace Restaurant.Repositories
 
         public IEnumerable<FoodItem> GetAllItems(string selectedMenuItem)
         {
-            var allItems = db.FoodItem.Where(f => f.Type == selectedMenuItem);
+            // var allItems = db.FoodItem.Where(f => f.Type == selectedMenuItem);
+            var allItems = db.FoodItem.Where(f => f.FoodId != 0 );
             return allItems;
         }
 
@@ -96,5 +107,27 @@ namespace Restaurant.Repositories
             };
             return (displayVM);
         }
+
+        public IEnumerable<OrderItemVM> GetAllOrderItems()
+        {
+            var allOrderItem = db.OrderItem.Where(oi => oi.OrderId != 0 );
+            OrderItemVM orderItemVM = new OrderItemVM();
+            foreach(var item in allOrderItem)
+            {
+                var ids = db.FoodItem.Where(fi => fi.FoodId == item.FoodId).FirstOrDefault();
+                orderItemVM = new OrderItemVM
+                {
+                    Itemname = ids.Name,
+                    ItemUnitPrice = Convert.ToDecimal(ids.UnitPrice),
+                    Qty = Convert.ToInt32(item.Quantity)
+
+                };
+
+            }
+
+            yield return orderItemVM;
+        }
+
+        
     }
 }

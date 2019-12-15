@@ -39,6 +39,7 @@ namespace Restaurant
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("RestaurantConnection")));
+
             services.AddIdentity<IdentityUser,IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI().AddDefaultTokenProviders();
@@ -55,6 +56,13 @@ namespace Restaurant
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             //services.AddTransient<IEmailSender, EmailService>();
+
+            services.AddSession(options => {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(160);
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +84,7 @@ namespace Restaurant
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

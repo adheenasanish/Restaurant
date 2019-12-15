@@ -22,8 +22,11 @@ namespace Restaurant.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual DbSet<CategoryFoodType> CategoryFoodType { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<FoodCategory> FoodCategory { get; set; }
         public virtual DbSet<FoodItem> FoodItem { get; set; }
+        public virtual DbSet<FoodType> FoodType { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<OrderItem> OrderItem { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
@@ -34,7 +37,7 @@ namespace Restaurant.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server= DESKTOP-UQ8S2PA\\SQLEXPRESS;Database=Restaurant;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server= localhost\\SQLEXPRESS;Database=Restaurant;Trusted_Connection=True;");
             }
         }
 
@@ -134,6 +137,27 @@ namespace Restaurant.Models
                     .HasForeignKey(d => d.UserId);
             });
 
+            modelBuilder.Entity<CategoryFoodType>(entity =>
+            {
+                entity.ToTable("category_foodType");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CategoryId).HasColumnName("categoryId");
+
+                entity.Property(e => e.TypeId).HasColumnName("typeId");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.CategoryFoodType)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK__category___categ__3F115E1A");
+
+                entity.HasOne(d => d.Type)
+                    .WithMany(p => p.CategoryFoodType)
+                    .HasForeignKey(d => d.TypeId)
+                    .HasConstraintName("FK__category___typeI__40058253");
+            });
+
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.Property(e => e.CustomerId).HasColumnName("customer_Id");
@@ -190,6 +214,20 @@ namespace Restaurant.Models
                     .HasConstraintName("userId");
             });
 
+            modelBuilder.Entity<FoodCategory>(entity =>
+            {
+                entity.HasKey(e => e.CategoryId);
+
+                entity.ToTable("foodCategory");
+
+                entity.Property(e => e.CategoryId).HasColumnName("categoryId");
+
+                entity.Property(e => e.CategoryName)
+                    .HasColumnName("categoryName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<FoodItem>(entity =>
             {
                 entity.HasKey(e => e.FoodId);
@@ -197,6 +235,8 @@ namespace Restaurant.Models
                 entity.ToTable("foodItem");
 
                 entity.Property(e => e.FoodId).HasColumnName("food_id");
+
+                entity.Property(e => e.FoodTypeId).HasColumnName("foodType_id");
 
                 entity.Property(e => e.Image)
                     .HasColumnName("image")
@@ -214,14 +254,33 @@ namespace Restaurant.Models
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.Property(e => e.Type)
-                    .HasColumnName("type")
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.UnitPrice)
                     .HasColumnName("unitPrice")
                     .HasColumnType("money");
+
+                entity.HasOne(d => d.FoodType)
+                    .WithMany(p => p.FoodItem)
+                    .HasForeignKey(d => d.FoodTypeId)
+                    .HasConstraintName("FK__foodItem__foodTy__3493CFA7");
+            });
+
+            modelBuilder.Entity<FoodType>(entity =>
+            {
+                entity.ToTable("foodType");
+
+                entity.Property(e => e.FoodTypeId).HasColumnName("foodType_id");
+
+                entity.Property(e => e.CategoryId).HasColumnName("categoryId");
+
+                entity.Property(e => e.TypeName)
+                    .HasColumnName("typeName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.FoodType)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK__foodType__catego__3C34F16F");
             });
 
             modelBuilder.Entity<Menu>(entity =>
@@ -246,7 +305,15 @@ namespace Restaurant.Models
 
                 entity.Property(e => e.FoodId).HasColumnName("food_id");
 
+                entity.Property(e => e.Hstgst)
+                    .HasColumnName("hstgst")
+                    .HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.OrderId).HasColumnName("order_Id");
+
+                entity.Property(e => e.Pst)
+                    .HasColumnName("pst")
+                    .HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
