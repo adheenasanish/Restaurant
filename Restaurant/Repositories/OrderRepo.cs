@@ -48,42 +48,46 @@ namespace Restaurant.Repositories
             yield return itemOrders;
         }
         //Create new order
-        public bool CreateNew(DisplayVM order,int userId)
+        public bool CreateNew(DisplayVM order,string userId)
         {
-            decimal GstOrHst = 8;
-            decimal PST = 0;
-           // Orders newOrder = new Orders
-           // {
-            //    OrderDate = DateTime.Now,
-            //    // PickupTime = order.PickupTime,
-            //    Qty = order.Qty,
-            //    CustomerId = userId
-            //};
-            //db.Orders.Add(newOrder);
-            //db.SaveChanges();
-            //int id = newOrder.OrderId;
-            var itemDetails = db.FoodItem.Where(food => food.FoodId == order.ItemId).FirstOrDefault();
-           // decimal price = Convert.ToDecimal(itemDetails.UnitPrice);
-            decimal total =Convert.ToDecimal( order.Qty) * order.ItemPrice;
-            DateTime dt = DateTime.Now;
-            var foodTypeDetails = db.FoodType.Where(ftd => ftd.FoodTypeId == itemDetails.FoodTypeId).FirstOrDefault();
-            var categoryDetails = db.FoodCategory.Where(cd => cd.CategoryId == foodTypeDetails.CategoryId).FirstOrDefault();
-
-            // var orderedItem = db.Orders.Where(o => o.OrderDate == dt && o.Qty == order.Qty && o.CustomerId == userId ).FirstOrDefault();
-
-            OrderItem orderItem = new OrderItem
+           
+           var itemDetails = db.FoodItem.Where(food => food.FoodId == order.ItemId).FirstOrDefault();
+            int productId = itemDetails.FoodId;
+            
+            var cart1 = db.ShoppingCart.Where(s => s.UserId == userId).FirstOrDefault();
+           
+            // Create an item in ShoppingCart
+            if (cart1 == null)
             {
-                //OrderId = id,
-                FoodId = order.ItemId,
-                Quantity = order.Qty,
-                Total = total
-                //Hstgst = total * (GstOrHst / 100),
-                //Pst = total * PST
+                ShoppingCart shoppingCart = new ShoppingCart
+                {
+                    UserId = userId,
+                    CreateDate = DateTime.Now
+                };
+                db.ShoppingCart.Add(shoppingCart);
+                db.SaveChanges();
+                     
 
+            }
+          
+                var cart = db.ShoppingCart.Where(s => s.UserId == userId).FirstOrDefault();
 
-            };
-            db.OrderItem.Add(orderItem);
-            db.SaveChanges();
+                // Add an item in Cart
+                CartItem cartItem = new CartItem
+                {
+                    ProductId = productId,
+                    Qty = order.Qty,
+                    CartId = cart.CartId,
+                    CreateDate = cart.CreateDate
+                };
+
+                db.CartItem.Add(cartItem);
+                db.SaveChanges();
+
+           
+           
+
+           
             return true;
         }
 
@@ -108,24 +112,32 @@ namespace Restaurant.Repositories
             return (displayVM);
         }
 
-        public IEnumerable<OrderItemVM> GetAllOrderItems()
+        public IEnumerable<CartVM> GetCartItems(string userId)
         {
-            var allOrderItem = db.OrderItem.Where(oi => oi.OrderId != 0 );
-            OrderItemVM orderItemVM = new OrderItemVM();
-            foreach(var item in allOrderItem)
+            var itemDetails = db.ShoppingCart.Where(s => s.UserId == userId).FirstOrDefault();
+
+            var cartItems = db.CartItem.Where(c => c.CartId == itemDetails.CartId);
+            CartVM cartVm = new CartVM();
+            List<CartVM> cartVMs = new List<CartVM>();
+
+            foreach(var item in cartItems)
             {
-                var ids = db.FoodItem.Where(fi => fi.FoodId == item.FoodId).FirstOrDefault();
-                orderItemVM = new OrderItemVM
+                var product = db.FoodItem.Where(f => f.FoodId == item.ProductId).FirstOrDefault();
+
+                cartVm = new CartVM
                 {
-                    Itemname = ids.Name,
-                    ItemUnitPrice = Convert.ToDecimal(ids.UnitPrice),
-                    Qty = Convert.ToInt32(item.Quantity)
+                    Productname = product.Name,
+                    Qty = item.Qty,
+                    unitPrice = Convert.ToDecimal(product.UnitPrice),
+                    total = Math.Round(Convert.ToDecimal(product.UnitPrice * item.Qty), 2)
+                } ;
 
-                };
+                cartVMs.Add(cartVm);
 
-            }
+            }        
+           
 
-            yield return orderItemVM;
+            return cartVMs;
         }
 
         

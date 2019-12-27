@@ -22,22 +22,25 @@ namespace Restaurant.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual DbSet<CartItem> CartItem { get; set; }
         public virtual DbSet<CategoryFoodType> CategoryFoodType { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<FoodCategory> FoodCategory { get; set; }
         public virtual DbSet<FoodItem> FoodItem { get; set; }
         public virtual DbSet<FoodType> FoodType { get; set; }
+        public virtual DbSet<Ipns> Ipns { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<OrderItem> OrderItem { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Payment> Payment { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server= localhost\\SQLEXPRESS;Database=Restaurant;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server= DESKTOP-UQ8S2PA\\SQLEXPRESS;Database=Restaurant;Trusted_Connection=True;");
             }
         }
 
@@ -135,6 +138,31 @@ namespace Restaurant.Models
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AspNetUserTokens)
                     .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.Property(e => e.CartItemId).HasColumnName("cartItemId");
+
+                entity.Property(e => e.CartId).HasColumnName("cartId");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnName("createDate")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ProductId).HasColumnName("productId");
+
+                entity.Property(e => e.Qty).HasColumnName("qty");
+
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.CartItem)
+                    .HasForeignKey(d => d.CartId)
+                    .HasConstraintName("FK__CartItem__cartId__6CD828CA");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.CartItem)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK__CartItem__produc__6BE40491");
             });
 
             modelBuilder.Entity<CategoryFoodType>(entity =>
@@ -283,6 +311,94 @@ namespace Restaurant.Models
                     .HasConstraintName("FK__foodType__catego__3C34F16F");
             });
 
+            modelBuilder.Entity<Ipns>(entity =>
+            {
+                entity.HasKey(e => e.PaymentId);
+
+                entity.ToTable("IPNs");
+
+                entity.Property(e => e.PaymentId)
+                    .HasColumnName("paymentId")
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Amount)
+                    .HasColumnName("amount")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Cart)
+                    .HasColumnName("cart")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnName("create_time")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Currency)
+                    .HasColumnName("currency")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Custom)
+                    .HasColumnName("custom")
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Intent)
+                    .HasColumnName("intent")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerCountryCode)
+                    .HasColumnName("payerCountryCode")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerEmail)
+                    .HasColumnName("payerEmail")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerFirstName)
+                    .HasColumnName("payerFirstName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerId)
+                    .HasColumnName("payerID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerLastName)
+                    .HasColumnName("payerLastName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerMiddleName)
+                    .HasColumnName("payerMiddleName")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayerStatus)
+                    .HasColumnName("payerStatus")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PaymentMethod)
+                    .HasColumnName("paymentMethod")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PaymentState)
+                    .HasColumnName("paymentState")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Menu>(entity =>
             {
                 entity.Property(e => e.MenuId).HasColumnName("menu_id");
@@ -391,6 +507,21 @@ namespace Restaurant.Models
                     .HasForeignKey<Payment>(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Payment__order_i__25518C17");
+            });
+
+            modelBuilder.Entity<ShoppingCart>(entity =>
+            {
+                entity.HasKey(e => e.CartId);
+
+                entity.Property(e => e.CartId).HasColumnName("cartId");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnName("createDate")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("userId")
+                    .HasMaxLength(450);
             });
         }
     }

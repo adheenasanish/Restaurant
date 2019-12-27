@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Restaurant.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Restaurant
 {
@@ -60,6 +61,23 @@ namespace Restaurant
             services.AddSession(options => {
                 // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromSeconds(160);
+            });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/auth/login";
+                options.AccessDeniedPath = "/auth/accessdenied";
+                options.Cookie.IsEssential = true;
+                options.SlidingExpiration = true; // here 1
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(10);// here 2
+
             });
 
 

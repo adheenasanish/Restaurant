@@ -1,53 +1,52 @@
-﻿@model IEnumerable<Restaurant.ViewModel.OrderItemVM>
+﻿@model IEnumerable<Restaurant.ViewModel.CartVM>
 
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "DisplayCart";
 }
 
-<h2>Cart</h2>
+<h2>Shopping Cart</h2>
 
 
 <table class="table">
     <thead>
-        <a class="btn btn-info" asp-action="GetItems">Back to Menu</a> |
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Itemname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemUnitPrice)
+                @Html.DisplayNameFor(model => model.Productname)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.total)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Itemname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ItemUnitPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Qty)
-                </td>
-                <td>
-                    @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-
-                </td>
-            </tr>
-            <tr>
-                <a class="btn btn-info" asp-action="GetItems">Pay Now </a>
-            </tr>
-
-        }
-
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Productname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.unitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
     </tbody>
 </table>
+

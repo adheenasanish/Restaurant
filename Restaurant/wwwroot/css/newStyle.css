@@ -10,7 +10,10 @@
     .myInput:focus {
         border-style: none;
     }
-
-    .bodyBackground{
-        background-color:black;
+    .body{
+        color:black;
     }
+
+    /*.bodyBackground{
+        background-color:black;*/
+    /*}*/

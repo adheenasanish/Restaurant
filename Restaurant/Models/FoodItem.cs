@@ -7,6 +7,7 @@ namespace Restaurant.Models
     {
         public FoodItem()
         {
+            CartItem = new HashSet<CartItem>();
             Menu = new HashSet<Menu>();
             OrderItem = new HashSet<OrderItem>();
         }
@@ -20,6 +21,7 @@ namespace Restaurant.Models
         public int? FoodTypeId { get; set; }
 
         public FoodType FoodType { get; set; }
+        public ICollection<CartItem> CartItem { get; set; }
         public ICollection<Menu> Menu { get; set; }
         public ICollection<OrderItem> OrderItem { get; set; }
     }

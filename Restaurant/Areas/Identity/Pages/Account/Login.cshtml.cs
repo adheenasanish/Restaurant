@@ -85,16 +85,17 @@ namespace Restaurant.Areas.Identity.Pages.Account
                     if (details == 1)
                     {
                         //ViewData 
-                        //HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(555));
-                        ViewData["status"] = 1;
+                        HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(1));
+                       // ViewData["status"] = 1;
                         
                     }
                     else
                     {
+                        HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(0));
                         //HttpContext.Session.SetInt32("SessionKeyName", 123);
                         ViewData["status"] = 0;
                     }
-                   // var ss = HttpContext.Session.GetInt32("SessionKeyName");
+                    var ss = HttpContext.Session.GetInt32("SessionKeyName");
                     _logger.LogInformation("User logged in.");
                     //if(Input.Email == )
 

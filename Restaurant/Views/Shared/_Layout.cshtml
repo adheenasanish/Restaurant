@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +7,7 @@
     <title>@ViewData["Title"] - Restaurant</title>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link  rel="stylesheet" href="~/lib/fontawesome-free-5.8.2-web/css/all.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-5.8.2-web/css/all.css" />
     <link rel="stylesheet" href="~/css/newStyle.css" />
 
 
@@ -21,115 +22,123 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/lib/fontawesome-free-5.8.2-web/css/all.css" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+        @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
     </environment>
 </head>
-    <body class="bodyBackground">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ABC Restaurant</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                      
-                        @{ 
-                            var data = ViewData["status"];
-                        }
-                        @if (User.IsInRole("Member"))
-                        {
-                            @*<li><a asp-area="" asp-controller="Customer" asp-action="Index">Home</a></li>*@
-                           
-                              <li><a asp-area="" asp-controller="Customer" asp-action="Create">Create</a></li>
-                            
-                            //else
-                            //{
-
-                            //}
-
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-
-                                    <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "breakfast" }, null)</li>
-                                    <li>@Html.ActionLink("Beef", "GetItems", "order", new { selectedMenuItem = "beef" }, null)</li>
-                                    <li>@Html.ActionLink("Chicken", "GetItems", "order", new { selectedMenuItem = "Chicken" }, null)</li>
-                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Sandwiches & Wraps</a></li>
-                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Salad</a></li>
-                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Snack & Side</a></li>
-                                    <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Beverages</a></li>
-
-
-                                </ul>
-                            </li>
-                            <li><a asp-area="" asp-controller="Order" asp-action="DisplayCart"><i class="fas fa-shopping-cart"></i></a></li>
-                            @*<li><a asp-area="" asp-controller="Order" asp-action="GetItems">GetItem</a></li>*@
-
-                        }
-
-
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li><a asp-area="" asp-controller="Customer" asp-action="Index">Customers</a></li>
-                            <li><a asp-area="" asp-controller="Role" asp-action="Index">Roles</a></li>
-                            <li>
-                                <a asp-area="" asp-controller="UserRole" asp-action="Index">
-                                    User-Roles
-                                </a>
-                            </li>
-                            <li><a asp-area="" asp-controller="FoodItem" asp-action="Index">Item List</a></li>
-                            <li><a asp-area="" asp-controller="FoodItem" asp-action="Create1">Add Food Item</a></li>
-                            <li><a asp-area="" asp-controller="Order" asp-action="Index">Orders List</a></li>
-                            @*<li><a asp-area="" asp-controller="Menu" asp-action="Index">Menu</a></li>*@
-
-                        }
-
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+<body >
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ABC Restaurant</a>
             </div>
-        </nav>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
 
-        @*<partial name="_CookieConsentPartial" />*@
+                    @{
+                        var ss = Context.Session.GetInt32("SessionKeyName");
+                      
+                    }
 
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer >
-                <p class="text-center">&copy; 2019 - ABC Restaurant</p>
-            </footer>
+
+                    @if (User.IsInRole("Member") && (ss == 1))
+                    {
+                        @*<li><a asp-area="" asp- ="Customer" asp-action="Index">Home</a></li>*@
+
+                        @*<li><a asp-area="" asp-controller="Customer" asp-action="Create">Create</a></li>*@
+
+                        //else
+                        //{
+
+
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+
+                                <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "breakfast" }, null)</li>
+                                <li>@Html.ActionLink("Beef", "GetItems", "order", new { selectedMenuItem = "beef" }, null)</li>
+                                <li>@Html.ActionLink("Chicken", "GetItems", "order", new { selectedMenuItem = "Chicken" }, null)</li>
+                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Sandwiches & Wraps</a></li>
+                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Salad</a></li>
+                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Snack & Side</a></li>
+                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Beverages</a></li>
+
+
+                            </ul>
+                        </li>
+                        <li><a asp-area="" asp-controller="Order" asp-action="DisplayCart"><i class="fas fa-shopping-cart"></i></a></li>
+                        @*<li><a asp-area="" asp-controller="Order" asp-action="GetItems">GetItem</a></li>*@
+
+                    }
+                    @if (User.IsInRole("Member") && (ss == 0))
+                    {
+                        <li><a asp-area="" asp-controller="Customer" asp-action="Create">Create</a></li>
+
+                    }
+
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="" asp-controller="Customer" asp-action="Index">Customers</a></li>
+                        <li><a asp-area="" asp-controller="Role" asp-action="Index">Roles</a></li>
+                        <li>
+                            <a asp-area="" asp-controller="UserRole" asp-action="Index">
+                                User-Roles
+                            </a>
+                        </li>
+                        <li><a asp-area="" asp-controller="FoodItem" asp-action="Index">Item List</a></li>
+                        <li><a asp-area="" asp-controller="FoodItem" asp-action="Create1">Add Food Item</a></li>
+                        <li><a asp-area="" asp-controller="Order" asp-action="Index">Orders List</a></li>
+                        @*<li><a asp-area="" asp-controller="Menu" asp-action="Index">Menu</a></li>*@
+
+                    }
+
+                </ul>
+                <partial name="_LoginPartial" />
+            </div>
         </div>
+    </nav>
 
-        <environment include="Development">
-            <script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-            <script src="~/js/site.js" asp-append-version="true"></script>
-        </environment>
-        <environment exclude="Development">
-            <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                    asp-fallback-test="window.jQuery"
-                    crossorigin="anonymous"
-                    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-            </script>
-            <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                    crossorigin="anonymous"
-                    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-            </script>
-            <script src="~/js/site.min.js" asp-append-version="true"></script>
-        </environment>
-          
-        @RenderSection("Scripts", required: false)
-    </body>
-    </html>
+    @*<partial name="_CookieConsentPartial" />*@
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p class="text-center">&copy; 2019 - ABC Restaurant</p>
+        </footer>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
 

@@ -81,26 +81,35 @@ namespace Restaurant.Controllers
             orderRepo = new OrderRepo(db);
             string useName = HttpContext.User.Identity.Name;
             var customer = db.Customer.Where(c => c.Email == useName).FirstOrDefault();
+            //if (customer.CustomerId == 0)
+            //{
+            //    return ViewBag.data = null;
+            //}
             int custId = customer.CustomerId;
+
+
             bool result = false;
-            if(ModelState.IsValid)
-            {
-                result = orderRepo.CreateNew(display,custId);
-            }
-            
-            if( result == true)
-            {
-                //return 
-            }
-            //DisplayVM fItem = orderRepo.GetDetails(id);
-            return RedirectToAction("GetItems", "Order");
+                if (ModelState.IsValid)
+                {
+                    result = orderRepo.CreateNew(display, useName);
+                }
+
+                if (result == true)
+                {
+                    //return 
+                }
+                //DisplayVM fItem = orderRepo.GetDetails(id);
+                return RedirectToAction("GetItems", "Order");
+
+
            
         }
 
         public IActionResult DisplayCart()
         {
             orderRepo = new OrderRepo(db);
-            IEnumerable< OrderItemVM> result = orderRepo.GetAllOrderItems();
+            string userName = HttpContext.User.Identity.Name;
+            IEnumerable< CartVM> result = orderRepo.GetCartItems(userName);
             return View(result);
         }
         //[HttpGet]

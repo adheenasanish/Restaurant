@@ -83,10 +83,10 @@ namespace Restaurant.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");               
                        
-        
+                    
 
                     UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
-                    userRoleRepo.AddUserRole(user.Email, "Member");
+                   await userRoleRepo.AddUserRole(user.Email, "Member");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Page(
