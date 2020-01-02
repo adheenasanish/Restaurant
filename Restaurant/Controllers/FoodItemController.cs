@@ -67,8 +67,8 @@ namespace Restaurant.Controllers
             foodItemRepo = new FoodItemRepo(db);
             bool result = false;
             string image = "";
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 if (imageUpload1 != null)
                 {
                     var fileName = Path.Combine(hostingEnvironment.WebRootPath, Path.GetFileName(imageUpload1.FileName));
@@ -81,7 +81,7 @@ namespace Restaurant.Controllers
 
                 }
                 result = foodItemRepo.CreateNew(food, image);
-            }
+         //   }
 
             if(result == true)
             {

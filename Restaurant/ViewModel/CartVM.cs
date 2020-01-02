@@ -8,6 +8,7 @@ namespace Restaurant.ViewModel
 {
     public class CartVM
     {
+        public int id { get; set; }
         [DisplayName("Item Name")]
         public string Productname { get; set; }
         [DisplayName("Quantity")]

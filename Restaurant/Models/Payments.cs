@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Restaurant.Models
 {
-    public partial class Ipns
+    public partial class Payments
     {
         public string Custom { get; set; }
         public string PaymentId { get; set; }

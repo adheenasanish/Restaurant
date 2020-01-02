@@ -82,6 +82,10 @@ namespace Restaurant.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     int details = db.Customer.Where(c => c.Email == Input.Email).Count();
+                   
+                   int checkShoppingCart = db.ShoppingCart.Where(s => s.UserId == Input.Email).Count();
+                    HttpContext.Session.SetInt32("SessionKeyCart", Convert.ToInt32(checkShoppingCart));
+
                     if (details == 1)
                     {
                         //ViewData 

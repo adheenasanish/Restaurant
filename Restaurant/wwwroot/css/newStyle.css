@@ -17,3 +17,10 @@
     /*.bodyBackground{
         background-color:black;*/
     /*}*/
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    color: black;
+}

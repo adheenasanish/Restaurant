@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Restaurant.Models;
 using Restaurant.ViewModel;
 using System;
@@ -6,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace Restaurant.Repositories
 {
@@ -17,36 +19,41 @@ namespace Restaurant.Repositories
         {
             this.db = db;
         }
-        public IEnumerable<OrderVM> GetAllOrder()
+
+        public IEnumerable<OrderVM> GetAllOrders()
         {
-            var allOrders = from oi in db.OrderItem
-                            from o in db.Orders
-                            where o.OrderId == oi.OrderId
-                            select new  { o.PickupTime, oi.OrderId ,oi.Total,oi.Quantity,oi.FoodId,o.OrderDate,o.Customer.FirstName,o.Customer.LastName};
-            OrderVM itemOrders = new OrderVM();
+            var orders = db.Orders;
 
+            OrderVM orderVM = new OrderVM();
 
-            foreach (var items in allOrders)
-             {
-                //var customer = db.Customer.Where(c => c.CustomerId == items.CustomerId).FirstOrDefault();
-                var food = db.FoodItem.Where(f => f.FoodId == items.FoodId).FirstOrDefault();
+            // details;
+            foreach (var order in orders )
+            {
+                int id = order.OrderId;
+               
+                var user = db.Customer.Where(c => c.UserId == order.UserId).FirstOrDefault();
+                var orderDetails = db.OrderDetails.Where(od => od.OrderId == id);
 
-                itemOrders = new OrderVM
+                foreach(var details in orderDetails)
                 {
-                    OrderId = Convert.ToInt32(items.OrderId),
-                    OrderDate = items.OrderDate,
-                    Qty = items.Quantity,
-                    PickupTime = items.PickupTime,
-                    LastName = items.LastName,
-                    FirstName = items.FirstName,
-                    Name = food.Name
-
-
-                };
+                    var foodDetails = db.FoodItem.Where(fi => fi.FoodId == details.FoodId).FirstOrDefault();
+                     orderVM = new OrderVM
+                    {
+                        OrderId = id,
+                       OrderDate = order.OrderDate,                      
+                       LastName = user.LastName,
+                       FirstName = user.FirstName,
+                       Name = foodDetails.Name,
+                       Qty = details.Quantity,
+                       Total = Convert.ToDecimal(order.Total)
+                     };
+                    yield return orderVM;
+                }
             }
 
-            yield return itemOrders;
         }
+   
+        
         //Create new order
         public bool CreateNew(DisplayVM order,string userId)
         {
@@ -91,11 +98,19 @@ namespace Restaurant.Repositories
             return true;
         }
 
+        //Get all Item based on menu
         public IEnumerable<FoodItem> GetAllItems(string selectedMenuItem)
         {
-            // var allItems = db.FoodItem.Where(f => f.Type == selectedMenuItem);
-            var allItems = db.FoodItem.Where(f => f.FoodId != 0 );
-            return allItems;
+           
+
+            if (selectedMenuItem == "Other")
+            {
+                var foodItem = db.FoodItem.Where(fi => fi.ItemCategory == "Other");
+                return foodItem;
+            }
+          
+           var foodItems = db.FoodItem.Where(fi => fi .ItemCategory == selectedMenuItem);
+            return foodItems;
         }
 
         public DisplayVM GetDetails(int id)
@@ -126,6 +141,7 @@ namespace Restaurant.Repositories
 
                 cartVm = new CartVM
                 {
+                    id = item.CartItemId,
                     Productname = product.Name,
                     Qty = item.Qty,
                     unitPrice = Convert.ToDecimal(product.UnitPrice),
@@ -140,6 +156,42 @@ namespace Restaurant.Repositories
             return cartVMs;
         }
 
-        
+        //Delete an item from Cart
+        public bool DeleteItemFromCart(int id)
+        {
+
+            var item = db.CartItem.Where(c => c.CartItemId == id).FirstOrDefault();
+            if(item != null)
+            {
+                db.CartItem.Remove(item);
+                db.SaveChanges();
+            }
+            return true;
+
+        }
+
+        //Check if there is any Item in the Cart
+        public bool CheckForItems(string userName)
+        {
+            var userIdFromShoppingCart = db.ShoppingCart.Where(s => s.UserId == userName).FirstOrDefault();
+
+            var result = db.CartItem.Where(c => c.CartId == userIdFromShoppingCart.CartId);
+            int count = 0;
+            
+            foreach(var item in result)
+            {
+                if(item != null)
+                {
+                    count++;
+                }
+            }
+            if(count != 0)
+            {
+                return true;
+            }
+                return false;
+        }
+
+
     }
 }

@@ -37,9 +37,15 @@ namespace Restaurant
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("RestaurantConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("RestaurantConnection")));
+          
+                services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite("Data Source=.\\wwwroot\\sql.db"));
+            services.AddDbContext<RestaurantContext>(options =>
+                options.UseSqlite("Data Source=.\\wwwroot\\sql.db"));
+
 
             services.AddIdentity<IdentityUser,IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -51,9 +57,9 @@ namespace Restaurant
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // For adding a dbcontext .
-            services.AddDbContext<RestaurantContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("RestaurantConnection")));
+            //services.AddDbContext<RestaurantContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("RestaurantConnection")));
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             //services.AddTransient<IEmailSender, EmailService>();
@@ -79,6 +85,12 @@ namespace Restaurant
                 options.ExpireTimeSpan = TimeSpan.FromSeconds(10);// here 2
 
             });
+
+            //services.AddMvc().AddRazorPagesOptions(options =>
+            //{
+            //    options.Conventions.AddPageRoute("/Home/Index","");
+            //});
+
 
 
         }

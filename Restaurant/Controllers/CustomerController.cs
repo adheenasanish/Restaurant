@@ -15,7 +15,7 @@ namespace Restaurant.Controllers
         private RestaurantContext db;
         private CustomerRepo custRepo;
         private IServiceProvider _serviceProvider;
-
+        public string ReturnUrl { get; set; }
         public CustomerController(RestaurantContext db, IServiceProvider _serviceProvide)
         {
             this.db = db;
@@ -54,7 +54,19 @@ namespace Restaurant.Controllers
             
             if( result == true)
             {
-                return RedirectToAction("Create", "Order");
+
+              
+                   
+                HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(1));
+               
+                HttpContext.Session.SetInt32("SessionKeyCart", Convert.ToInt32(0));
+
+                return RedirectToAction("Index", "Home");
+               
+                //string returnUrl = null;
+                //returnUrl = returnUrl ?? Url.Content("~/");
+
+                //return LocalRedirect("~/");
             }
             else
             {

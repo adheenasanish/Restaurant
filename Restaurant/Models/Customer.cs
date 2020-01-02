@@ -8,7 +8,6 @@ namespace Restaurant.Models
         public Customer()
         {
             Orders = new HashSet<Orders>();
-            Payment = new HashSet<Payment>();
         }
 
         public int CustomerId { get; set; }
@@ -25,6 +24,5 @@ namespace Restaurant.Models
 
         public AspNetUsers User { get; set; }
         public ICollection<Orders> Orders { get; set; }
-        public ICollection<Payment> Payment { get; set; }
     }
 }

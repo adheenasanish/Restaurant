@@ -4,59 +4,61 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Food Item List</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-           
-            <th>
-                @Html.DisplayNameFor(model => model.UnitPrice)
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Type)*@
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemCategory)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <img src="@Html.DisplayFor(modelItem => item.Image)" width="230" height="230" style="border:1px solid gray" ; />
-          
-            </td>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitPrice)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.Type)*@
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemCategory)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.FoodId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Image)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.UnitPrice)
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.Type)*@
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ItemCategory)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <img src="@Html.DisplayFor(modelItem => item.Image)" width="230" height="230" style="border:1px solid gray" ; />
+
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitPrice)
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.Type)*@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ItemCategory)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.FoodId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.FoodId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

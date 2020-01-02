@@ -46,7 +46,7 @@ namespace Restaurant.Repositories
             {
                     Name =  food.Name,
                     Image = image,
-                    Quantity = food.Quantity,
+                    Quantity = 0,
                     UnitPrice =food.UnitPrice,
                     ItemCategory = category.CategoryName,
                     FoodTypeId = food.FoodTypeId
@@ -77,7 +77,16 @@ namespace Restaurant.Repositories
 
         public bool Update(FoodItem food)
         {
-            db.FoodItem.Update(food);
+            var category = db.FoodCategory.Where(fc => fc.CategoryId == Convert.ToInt32(food.ItemCategory)).FirstOrDefault();
+            FoodItem foodItem = new FoodItem
+            {
+                Name = food.Name,
+                Image = food.Image,
+                UnitPrice = food.UnitPrice,
+                ItemCategory = category.CategoryName
+
+            };
+            db.FoodItem.Update(foodItem);
             db.SaveChanges();
             return true;
         }

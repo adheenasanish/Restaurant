@@ -28,11 +28,10 @@ namespace Restaurant.Models
         public virtual DbSet<FoodCategory> FoodCategory { get; set; }
         public virtual DbSet<FoodItem> FoodItem { get; set; }
         public virtual DbSet<FoodType> FoodType { get; set; }
-        public virtual DbSet<Ipns> Ipns { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
-        public virtual DbSet<OrderItem> OrderItem { get; set; }
+        public virtual DbSet<OrderDetails> OrderDetails { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
-        public virtual DbSet<Payment> Payment { get; set; }
+        public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -311,11 +310,90 @@ namespace Restaurant.Models
                     .HasConstraintName("FK__foodType__catego__3C34F16F");
             });
 
-            modelBuilder.Entity<Ipns>(entity =>
+            modelBuilder.Entity<Menu>(entity =>
+            {
+                entity.Property(e => e.MenuId).HasColumnName("menu_id");
+
+                entity.Property(e => e.FoodId).HasColumnName("food_id");
+
+                entity.Property(e => e.Price)
+                    .HasColumnName("price")
+                    .HasColumnType("money");
+
+                entity.HasOne(d => d.Food)
+                    .WithMany(p => p.Menu)
+                    .HasForeignKey(d => d.FoodId)
+                    .HasConstraintName("FK__Menu__food_id__2B0A656D");
+            });
+
+            modelBuilder.Entity<OrderDetails>(entity =>
+            {
+                entity.HasKey(e => e.OrderItemId);
+
+                entity.Property(e => e.OrderItemId).HasColumnName("orderItemId");
+
+                entity.Property(e => e.FoodId).HasColumnName("food_id");
+
+                entity.Property(e => e.Hstgst)
+                    .HasColumnName("hstgst")
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_Id");
+
+                entity.Property(e => e.Pst)
+                    .HasColumnName("pst")
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.HasOne(d => d.Food)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.FoodId)
+                    .HasConstraintName("FK__OrderItem__food___2DE6D218");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK__OrderItem__order__2EDAF651");
+            });
+
+            modelBuilder.Entity<Orders>(entity =>
+            {
+                entity.HasKey(e => e.OrderId);
+
+                entity.Property(e => e.OrderId).HasColumnName("order_Id");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+
+                entity.Property(e => e.OrderDate).HasColumnType("date");
+
+                entity.Property(e => e.PayementStatus)
+                    .HasColumnName("payementStatus")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Total)
+                    .HasColumnName("total")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("userId")
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK__Orders__customer__1DB06A4F");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__Orders__userId__6FB49575");
+            });
+
+            modelBuilder.Entity<Payments>(entity =>
             {
                 entity.HasKey(e => e.PaymentId);
-
-                entity.ToTable("IPNs");
 
                 entity.Property(e => e.PaymentId)
                     .HasColumnName("paymentId")
@@ -345,7 +423,7 @@ namespace Restaurant.Models
 
                 entity.Property(e => e.Custom)
                     .HasColumnName("custom")
-                    .HasMaxLength(5)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Intent)
@@ -397,116 +475,6 @@ namespace Restaurant.Models
                     .HasColumnName("paymentState")
                     .HasMaxLength(50)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Menu>(entity =>
-            {
-                entity.Property(e => e.MenuId).HasColumnName("menu_id");
-
-                entity.Property(e => e.FoodId).HasColumnName("food_id");
-
-                entity.Property(e => e.Price)
-                    .HasColumnName("price")
-                    .HasColumnType("money");
-
-                entity.HasOne(d => d.Food)
-                    .WithMany(p => p.Menu)
-                    .HasForeignKey(d => d.FoodId)
-                    .HasConstraintName("FK__Menu__food_id__2B0A656D");
-            });
-
-            modelBuilder.Entity<OrderItem>(entity =>
-            {
-                entity.Property(e => e.OrderItemId).HasColumnName("orderItemId");
-
-                entity.Property(e => e.FoodId).HasColumnName("food_id");
-
-                entity.Property(e => e.Hstgst)
-                    .HasColumnName("hstgst")
-                    .HasColumnType("decimal(18, 0)");
-
-                entity.Property(e => e.OrderId).HasColumnName("order_Id");
-
-                entity.Property(e => e.Pst)
-                    .HasColumnName("pst")
-                    .HasColumnType("decimal(18, 0)");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.Property(e => e.Total)
-                    .HasColumnName("total")
-                    .HasColumnType("money");
-
-                entity.HasOne(d => d.Food)
-                    .WithMany(p => p.OrderItem)
-                    .HasForeignKey(d => d.FoodId)
-                    .HasConstraintName("FK__OrderItem__food___2DE6D218");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrderItem)
-                    .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__OrderItem__order__2EDAF651");
-            });
-
-            modelBuilder.Entity<Orders>(entity =>
-            {
-                entity.HasKey(e => e.OrderId);
-
-                entity.Property(e => e.OrderId).HasColumnName("order_Id");
-
-                entity.Property(e => e.CustomerId).HasColumnName("customer_id");
-
-                entity.Property(e => e.OrderDate)
-                    .HasColumnName("orderDate")
-                    .HasColumnType("date");
-
-                entity.Property(e => e.PickupTime).HasColumnName("pickupTime");
-
-                entity.Property(e => e.Qty).HasColumnName("qty");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Orders__customer__1DB06A4F");
-            });
-
-            modelBuilder.Entity<Payment>(entity =>
-            {
-                entity.HasKey(e => e.OrderId);
-
-                entity.Property(e => e.OrderId)
-                    .HasColumnName("order_id")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Amount)
-                    .HasColumnName("amount")
-                    .HasColumnType("money");
-
-                entity.Property(e => e.CustomerId).HasColumnName("customer_id");
-
-                entity.Property(e => e.PaymentDate)
-                    .HasColumnName("paymentDate")
-                    .HasColumnType("date");
-
-                entity.Property(e => e.PaymentId)
-                    .HasColumnName("payment_id")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.PaymentType)
-                    .HasColumnName("paymentType")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Payment)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Payment__custome__245D67DE");
-
-                entity.HasOne(d => d.Order)
-                    .WithOne(p => p.Payment)
-                    .HasForeignKey<Payment>(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Payment__order_i__25518C17");
             });
 
             modelBuilder.Entity<ShoppingCart>(entity =>

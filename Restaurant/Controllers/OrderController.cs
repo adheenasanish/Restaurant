@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Models;
 using Restaurant.Repositories;
@@ -13,7 +14,7 @@ namespace Restaurant.Controllers
     {
         private RestaurantContext db;
         private OrderRepo orderRepo;
-
+        
         public OrderController(RestaurantContext db)
         {
             this.db = db;
@@ -21,7 +22,8 @@ namespace Restaurant.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<OrderVM> orders = orderRepo.GetAllOrder();
+            orderRepo = new OrderRepo(db);
+            IEnumerable<OrderVM> orders = orderRepo.GetAllOrders();
             return View(orders);
         }
 
@@ -31,16 +33,15 @@ namespace Restaurant.Controllers
             return View();
         }
 
-        public IActionResult GetItems(string selectedMenuItem)
+        //Get all items based on the selected menu item
+        public IActionResult GetItems(string selectedMenuItem )
         {
             orderRepo = new OrderRepo(db);
             IEnumerable<FoodItem> foodItems = orderRepo.GetAllItems(selectedMenuItem);
-          
+            HttpContext.Session.SetString("SessionKeyMenu", Convert.ToString(selectedMenuItem));
+
             List<DisplayVM> itemName = new List<DisplayVM>();
-          
-            //string[,] viewArray = new string[itemName, itemImage] {" ",""} ;
-            //int count = itemName.Count;
-            
+                      
             foreach (FoodItem foodItem in foodItems)
             {
                 string itemType = foodItem.Name;
@@ -62,7 +63,7 @@ namespace Restaurant.Controllers
                 };
                 itemName.Add(displayVM);
             }
-            //itemName.Add(itemName.)
+            
             return View(itemName);
         }
 
@@ -81,10 +82,7 @@ namespace Restaurant.Controllers
             orderRepo = new OrderRepo(db);
             string useName = HttpContext.User.Identity.Name;
             var customer = db.Customer.Where(c => c.Email == useName).FirstOrDefault();
-            //if (customer.CustomerId == 0)
-            //{
-            //    return ViewBag.data = null;
-            //}
+           
             int custId = customer.CustomerId;
 
 
@@ -96,15 +94,17 @@ namespace Restaurant.Controllers
 
                 if (result == true)
                 {
-                    //return 
+                   HttpContext.Session.SetInt32("SessionKeyCart", Convert.ToInt32(1));
                 }
-                //DisplayVM fItem = orderRepo.GetDetails(id);
-                return RedirectToAction("GetItems", "Order");
+            string menu = HttpContext.Session.GetString("SessionKeyMenu");
+
+            return RedirectToAction("GetItems", "Order",new { selectedMenuItem = menu });
 
 
            
         }
 
+        //Displays the cart Items
         public IActionResult DisplayCart()
         {
             orderRepo = new OrderRepo(db);
@@ -112,35 +112,52 @@ namespace Restaurant.Controllers
             IEnumerable< CartVM> result = orderRepo.GetCartItems(userName);
             return View(result);
         }
-        //[HttpGet]
-        //public IActionResult showAll()
-        //{
-        //    orderRepo = new OrderRepo(db);
-        //    IEnumerable<FoodItem> foodItems = orderRepo.GetAllItems();
-        //    return View(foodItems);
+        
+        //Delete items from cart
+        public IActionResult Delete(int id)
+        {
+            if(id == 0)
+            {
+                return NotFound();
+            }
+            string userName = HttpContext.User.Identity.Name;
+            orderRepo = new OrderRepo(db);
+            bool result = orderRepo.DeleteItemFromCart(id);
+
+            bool checkForIems = orderRepo.CheckForItems(userName);
+            if( checkForIems == false)
+            {
+                HttpContext.Session.SetInt32("SessionKeyCart", Convert.ToInt32(0));
+            }
+            var checkCart = HttpContext.Session.GetInt32("SessionKeyCart");
+            if (checkCart == 0)
+            {
+                return RedirectToAction("CartEmpty", "Order");
+            }
+            else
+            {
+                return RedirectToAction("DisplayCart", "Order");
+            }        
+           
+              
+                   
+        }
+        //Display cart Empty message
+        public IActionResult CartEmpty()
+        {
+            return View();
+        }
+       
+        public IActionResult Pay()
+        {
+            orderRepo = new OrderRepo(db);
+            string userName = HttpContext.User.Identity.Name;
+            IEnumerable<CartVM> result = orderRepo.GetCartItems(userName);
+            return View(result);
+        }
 
 
-        //}
-        //[HttpPost]
-        //public IActionResult Create(OrderVM order)
-        //{
-        // string userName = HttpContext.User.Identity.Name;
-        //// var customer = db.Customer.Where(c => c.Userid == userName).FirstOrDefault();
-        //// int custId = customer.CustomerId;
-        // bool result = false;
-        // if(ModelState.IsValid)
-        // {
-        //     result = orderRepo.CreateNew(order, custId);
-        // }
-        // if(result == true)
-        // {
-        //     return RedirectToAction("Index", "Order");
-        // }
-        // else
-        // {
-        //     return NotFound();
-        // }
-        //}
+        
         [HttpGet]
         public IActionResult addtoCart()
         {
@@ -153,7 +170,7 @@ namespace Restaurant.Controllers
             return View();
         }
 
+       
     }
 }
 
-// public IActionResult addToCart(int id,string itemname,string type,decimal itemPrice,decimal total,int qty)

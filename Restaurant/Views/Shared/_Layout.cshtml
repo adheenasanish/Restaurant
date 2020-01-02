@@ -6,9 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Restaurant</title>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+
     <link rel="stylesheet" href="~/lib/fontawesome-free-5.8.2-web/css/all.css" />
     <link rel="stylesheet" href="~/css/newStyle.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
 
     <environment include="Development">
@@ -21,13 +26,13 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/lib/fontawesome-free-5.8.2-web/css/all.css" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">*@
         @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>*@
     </environment>
 </head>
-<body >
+<body style="color:black;">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -43,12 +48,17 @@
                 <ul class="nav navbar-nav">
 
                     @{
-                        var ss = Context.Session.GetInt32("SessionKeyName");
-                      
+                        var checkUser = Context.Session.GetInt32("SessionKeyName");
+
+                    }
+
+                    @{
+
+                        var checkCart = Context.Session.GetInt32("SessionKeyCart");
                     }
 
 
-                    @if (User.IsInRole("Member") && (ss == 1))
+                    @if (User.IsInRole("Member") && (checkUser == 1))
                     {
                         @*<li><a asp-area="" asp- ="Customer" asp-action="Index">Home</a></li>*@
 
@@ -63,24 +73,33 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu <span class="caret"></span></a>
                             <ul class="dropdown-menu">
 
-                                <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "breakfast" }, null)</li>
-                                <li>@Html.ActionLink("Beef", "GetItems", "order", new { selectedMenuItem = "beef" }, null)</li>
-                                <li>@Html.ActionLink("Chicken", "GetItems", "order", new { selectedMenuItem = "Chicken" }, null)</li>
-                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Sandwiches & Wraps</a></li>
-                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Salad</a></li>
-                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Snack & Side</a></li>
-                                <li><a asp-area="" asp-controller="Order" asp-action="GetItems">Beverages</a></li>
+                                <li>@Html.ActionLink("Breakfast", "GetItems", "order", new { selectedMenuItem = "Breakfast" }, null)</li>
+                                <li>@Html.ActionLink("Burger", "GetItems", "order", new { selectedMenuItem = "Other" }, null)</li>
+                                <li>@Html.ActionLink("Wrap", "GetItems", "order", new { selectedMenuItem = "Wrap" }, null)</li>
+                                <li>@Html.ActionLink("Soup", "GetItems", "order", new { selectedMenuItem = "Soup" }, null)</li>
+                                <li>@Html.ActionLink("Snacks", "GetItems", "order", new { selectedMenuItem = "Snacks" }, null)</li>
+                                <li>@Html.ActionLink("Sides", "GetItems", "order", new { selectedMenuItem = "Sides" }, null)</li>
+                                <li>@Html.ActionLink("Beverages", "GetItems", "order", new { selectedMenuItem = "Beverages" }, null)</li>
 
 
                             </ul>
                         </li>
-                        <li><a asp-area="" asp-controller="Order" asp-action="DisplayCart"><i class="fas fa-shopping-cart"></i></a></li>
+                        @if (checkCart == 0)
+                        {
+
+                            <li><a asp-area="" asp-controller="Order" asp-action="CartEmpty"><i class="fas fa-shopping-cart"></i></a></li>
+                        }
+                        else if (checkCart == 1)
+                        {
+                            <li><a asp-area="" asp-controller="Order" asp-action="DisplayCart"><i class="fas fa-shopping-cart"></i></a></li>
+                        }
+
                         @*<li><a asp-area="" asp-controller="Order" asp-action="GetItems">GetItem</a></li>*@
 
                     }
-                    @if (User.IsInRole("Member") && (ss == 0))
+                    @if (User.IsInRole("Member") && (checkUser == 0))
                     {
-                        <li><a asp-area="" asp-controller="Customer" asp-action="Create">Create</a></li>
+                        <li><a asp-area="" asp-controller="Customer" asp-action="Create">Create Profile</a></li>
 
                     }
 
@@ -94,10 +113,10 @@
                                 User-Roles
                             </a>
                         </li>
-                        <li><a asp-area="" asp-controller="FoodItem" asp-action="Index">Item List</a></li>
-                        <li><a asp-area="" asp-controller="FoodItem" asp-action="Create1">Add Food Item</a></li>
-                        <li><a asp-area="" asp-controller="Order" asp-action="Index">Orders List</a></li>
-                        @*<li><a asp-area="" asp-controller="Menu" asp-action="Index">Menu</a></li>*@
+                        <li><a asp-area="" asp-controller="FoodItem" asp-action="Index">Food Item List</a></li>
+
+                        <li><a asp-area="" asp-controller="Order" asp-action="Index">Orders</a></li>
+
 
                     }
 
@@ -111,10 +130,23 @@
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p class="text-center">&copy; 2019 - ABC Restaurant</p>
+
+        <footer id="main-footer" class="navbar navbar-fixed-bottom ">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center py-4">
+
+                        <p>&copy;ABC Restaurant-<span id="year"></span>.Developed by Adheena Sanish</p>
+                        <!-- <p>Developed by Adheena Sanish</p> -->
+                        <!-- //<button class="btn-primary" data-toggle="modal" data-target="#contactModal">Contact us</button> -->
+                    </div>
+                </div>
+            </div>
         </footer>
+
+        @*<footer class="navbar navbar-fixed-bottom">
+                <p class="text-center">&copy; 2019 - ABC Restaurant</p>
+            </footer>*@
     </div>
 
     <environment include="Development">
@@ -141,4 +173,31 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script>
+    //Get the current year
+    $('#year').text(new Date().getFullYear());
+
+    //init Scrollspy
+    $('body').scrollspy({ target: '#main-nav' });
+
+    //Smooth Scrolling
+    $("#main-nav a").on('click', function (event) {
+        if (this.hash !== "") {
+            event.preventDefault();
+            const hash = this.hash;
+            $('html,body').animate({
+                scrollTop: $(hash).offset().top
+            }, 800, function () {
+                window.location.hash = hash;
+            });
+        }
+    });
+
+</script>
 

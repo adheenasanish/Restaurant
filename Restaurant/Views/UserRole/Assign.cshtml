@@ -4,12 +4,13 @@
     ViewData["Title"] = "Assign";
 }
 
-<h2>Assign</h2>
+<h2 class="text-center">Assign Roles</h2>
 
-<h4>UserRoleVM</h4>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    
+    <div class="col-md-offset-3 col-md-6 col-md-offset-3">
         <form asp-action="Assign">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -33,15 +34,18 @@
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-success" /> |
+                <a asp-action="Index" class="btn btn-info">Back to List</a>
             </div>
         </form>
     </div>
+
+    @*<div>
+            <a asp-action="Index">Back to List</a>
+        </div>*@
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -9,7 +9,7 @@ namespace Restaurant.Models
         {
             CartItem = new HashSet<CartItem>();
             Menu = new HashSet<Menu>();
-            OrderItem = new HashSet<OrderItem>();
+            OrderDetails = new HashSet<OrderDetails>();
         }
 
         public int FoodId { get; set; }
@@ -23,6 +23,6 @@ namespace Restaurant.Models
         public FoodType FoodType { get; set; }
         public ICollection<CartItem> CartItem { get; set; }
         public ICollection<Menu> Menu { get; set; }
-        public ICollection<OrderItem> OrderItem { get; set; }
+        public ICollection<OrderDetails> OrderDetails { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace Restaurant.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             RestaurantContext context,
             IServiceProvider serviceProvider,
-            IEmailSender emailSender)
+            IEmailSender emailSender, RestaurantContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,6 +41,7 @@ namespace Restaurant.Areas.Identity.Pages.Account
             _context = context;
             _serviceProvider = serviceProvider;
             _emailSender = emailSender;
+            this.db = db;
         }
 
         [BindProperty]
@@ -81,9 +82,8 @@ namespace Restaurant.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");               
-                       
-                    
+                    _logger.LogInformation("User created a new account with password.");
+
 
                     UserRoleRepo userRoleRepo = new UserRoleRepo(_serviceProvider, _context);
                    await userRoleRepo.AddUserRole(user.Email, "Member");
@@ -100,6 +100,20 @@ namespace Restaurant.Areas.Identity.Pages.Account
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     HttpContext.Session.SetInt32("status", 0);
+                    int details = db.Customer.Where(c => c.Email == Input.Email).Count();
+                    if (details == 1)
+                    {
+                        //ViewData 
+                        HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(1));
+                        // ViewData["status"] = 1;
+
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetInt32("SessionKeyName", Convert.ToInt32(0));
+                        //HttpContext.Session.SetInt32("SessionKeyName", 123);
+                        ViewData["status"] = 0;
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

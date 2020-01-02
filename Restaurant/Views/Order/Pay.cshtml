@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Restaurant.ViewModel.CartVM>
+
+@{
+    ViewData["Title"] = "Pay";
+}
+
+<h2>Payment</h2>
+
+@{decimal subtotal = 0;
+    int count = 0;}
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Productname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitPrice)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Productname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.unitPrice)
+                </td>
+
+
+            </tr>
+            subtotal = subtotal + Math.Round(Convert.ToDecimal(item.Qty * item.unitPrice), 2);
+            count++;
+        }
+    </tbody>
+    <tr align="left">
+        <td><b> Subtotal :</b> </td>
+        <td><b> </b></td>
+        <td align="left"><b> @subtotal </b></td>
+        <td> <a class="btn btn-info" asp-controller="Order" asp-action="Pay"> Proceed</a> </td>
+    </tr>
+   
+</table>
+
+

@@ -3,7 +3,7 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     padding-top: 50px;
     padding-bottom: 20px;
-    
+    /*padding-bottom: 70px;*/
 }
 
 /* Wrapping element */
@@ -11,18 +11,104 @@ body {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    /*padding-bottom: 70px;*/
+  
 }
 
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
     line-height: 1.4;
+    
+}
+.border-top {
+    border-top: 1px solid #403D39;
+    width: 850px;
+    margin:auto;
+}
+/*Set the top padding*/
+.center {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    border: 1px solid green;
+    border-radius:5px;
+    margin-top:25px;
+
+}
+/*Customized styles for landing page*/
+
+#home-section {
+    background: url('img/burger-2762431_960_720.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 508px;
+    z-index: -1;
 }
 
+    #home-section .dark-overlay {
+        
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 508px;
+        background: rgba(0,0,0,0.7);
+    }
+
+    #home-section .home-inner {
+        padding-top: 350px;
+    }
+
+    #home-section .card-form {
+        opacity: 0.8;
+    }
+    .heading{
+        text-align:center;
+        position:relative;
+        margin-top:-500px;
+        color:wheat;
+        font-weight:bold;
+        font-size:50px;
+    }
+    #home-section .fas, #create-section .fas {
+        color: #008ed6;
+        background: white;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+#explore-section .fas, #share-section .fas {
+    background: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.heading-font {
+    font-family: 'Noto Serif', serif;
+    font-family: 'Monda', sans-serif;
+    font-family: 'Cinzel', serif;
+    color:wheat;
+}
+
+.heading-block {
+    text-align: center;
+}
+
+
+
+/* end for style*/
+.btn-margin {
+    margin-top:10px;
+}
 /* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"] {
     width: 100%;
 }
+
+/*.col-md-4 {
+    width: 100%;
+}*/
 
 /* QR code generator */
 #qrCode {
@@ -855,4 +941,22 @@ body {
 
 .glyphicon-wrench:before {
     content: "\1f527";
+}
+
+@media(min-height: 502px) {
+    #home-section {
+        min-height: 408px;
+    }
+        #home-section .dark-overlay {
+            min-height: 508px;
+        }
+}
+@media(max-height: 992px) {
+    #home-section {
+        min-height: 808px;
+    }
+
+        #home-section .dark-overlay {
+            min-height: 808px;
+        }
 }
